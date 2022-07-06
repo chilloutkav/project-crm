@@ -15,11 +15,10 @@ puts "Seeding companies..."
 Company.create(company_name: "Google", owner_name: "Larry Page", description: "Technology Company", annual_rev: 256700000000, user_id: "1" )
 Company.create(company_name: "Buzzfeed", owner_name: "Jonah Peretti", description: "Digital Media Company", annual_rev: 398000000, user_id: "2")
 
-
 puts "Seeding contacts..."
 
-Contact.create(name: "Bob Murray", email: "test@mail.com", lifecycle_stage: "Lead", job_title: "SDR" user_id: 1, company_id: 1)
-Contact.create(name: "Charlie Copper", email: "test@mail.com", lifecycle_stage: "Lead", job_title: "SDR" user_id: 2, company_id: 2)
+Contact.create(name: "Bob Murray", email: "test@mail.com", lifecycle_stage: "Lead", job_title: "SDR", user_id: 1, company_id: 1)
+Contact.create(name: "Charlie Copper", email: "test@mail.com", lifecycle_stage: "Lead", job_title: "SDR", user_id: 2, company_id: 2)
 
 puts "Seeding deals..."
 

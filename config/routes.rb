@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
-  resources :deals
-  resources :contacts
-  resources :companies
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   resources :users, only: [:create, :show]
+  resources :deals
+  resources :contacts
+  resources :companies
 
   post "/signup", to: "users#create"
   post "/login", to: "sessions#create"

@@ -10,19 +10,59 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_01_152951) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_06_142425) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "companies", force: :cascade do |t|
+    t.string "company_name"
+    t.string "owner_name"
+    t.string "description"
+    t.string "annual_rev"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_companies_on_user_id"
+  end
+
+  create_table "contacts", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.string "lifecycle_stage"
+    t.string "job_title"
+    t.bigint "user_id", null: false
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_contacts_on_company_id"
+    t.index ["user_id"], name: "index_contacts_on_user_id"
+  end
+
+  create_table "deals", force: :cascade do |t|
+    t.string "deal_name"
+    t.string "deal_stage"
+    t.integer "amount"
+    t.bigint "user_id", null: false
+    t.bigint "contact_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contact_id"], name: "index_deals_on_contact_id"
+    t.index ["user_id"], name: "index_deals_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
     t.string "username"
     t.string "email"
-    t.string "password"
-    t.string "password_confirmation"
+    t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "companies", "users"
+  add_foreign_key "contacts", "companies"
+  add_foreign_key "contacts", "users"
+  add_foreign_key "deals", "contacts"
+  add_foreign_key "deals", "users"
 end
