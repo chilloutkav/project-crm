@@ -2,12 +2,15 @@
     "name": "project-crm",
     "description": "CRM for small to med size businesses",
     "engines": {
-      "node": ">= 14"
+        "node": ">= 14"
     },
     "scripts": {
-      "build": "npm install --prefix client && npm run build --prefix client",
-      "clean": "rm -rf public",
-      "deploy": "cp -a client/build/. public/",
-      "heroku-postbuild": "npm run clean && npm run build && npm run deploy"
+        "build": "npm install --prefix client && npm run build --prefix client",
+        "clean": "rm -rf public",
+        "deploy": "cp -a client/build/. public/",
+        "heroku-postbuild": "npm run clean && npm run build && npm run deploy"
+    },
+    "devDependencies": {
+        "tailwindcss": "^3.1.4"
     }
-  }
+}
