@@ -8,12 +8,12 @@ class ContactsController < ApplicationController
     end
 
     def show 
-        drink = contact.find(params[:id])
+        contact = Contact.find(params[:id])
         render json: contact
     end 
 
     def create 
-        drink = @current_user.contacts.create!(contact_params)
+        contact = @current_user.contacts.create!(contact_params)
         render json: contact, status: :created
     end
 

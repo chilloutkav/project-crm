@@ -12,7 +12,13 @@ const NavBar = ({ setUser }) => {
   }
   return (
     <div>
-      <button onClick={handleLogout}>Logout</button>
+      <div>
+        <p>Dashboard</p>
+        <p>Contacts</p>
+        <p>Companies</p>
+        <p>Deals</p>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
     </div>
   );
 };

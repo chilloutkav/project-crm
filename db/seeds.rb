@@ -22,6 +22,6 @@ Contact.create(name: "Charlie Copper", email: "test@mail.com", lifecycle_stage: 
 
 puts "Seeding deals..."
 
-Deal.create(deal_name: "1 year dev retainer", deal_stage: "Contract Sent", amount: 100000, user_id: 1, contact_id: 1 )
+Deal.create(deal_name: "1 year dev retainer", deal_stage: "Contract Sent", amount: 100000, user_id: 1, contact_id: 1)
 Deal.create(deal_name: "Buzzfeed Website Rebuild", deal_stage: "Proposal Accepted", amount: 120000, user_id: 2, contact_id: 2)
 
