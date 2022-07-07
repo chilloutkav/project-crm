@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const NavBar = ({ setUser }) => {
   function handleLogout() {
@@ -13,10 +14,18 @@ const NavBar = ({ setUser }) => {
   return (
     <div>
       <div>
-        <p>Dashboard</p>
+        <Link to="/">
+          <p>Homepage</p>
+        </Link>
+        <Link to="/dashboard">
+          <p>Dashboard</p>
+        </Link>
         <p>Contacts</p>
         <p>Companies</p>
         <p>Deals</p>
+        <Link to="/login">
+          <p>Login</p>
+        </Link>
         <button onClick={handleLogout}>Logout</button>
       </div>
     </div>

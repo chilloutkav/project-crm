@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import SignUp from "./SignUp";
 import Login from "./Login";
-import NavBar from "./NavBar";
 
-const Home = ({ onLogin }) => {
+const SignUpLoginPage = ({ onLogin }) => {
   const [showLogin, setShowLogin] = useState(true);
 
   return (
     <div>
-      <NavBar />
       {showLogin ? (
         <div>
           <Login onLogin={onLogin} />
@@ -30,4 +28,4 @@ const Home = ({ onLogin }) => {
   );
 };
 
-export default Home;
+export default SignUpLoginPage;
