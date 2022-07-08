@@ -5,8 +5,8 @@ class CreateContacts < ActiveRecord::Migration[7.0]
       t.string :email
       t.string :lifecycle_stage
       t.string :job_title
+      t.string :company
       t.belongs_to :user, null: false, foreign_key: true
-      t.belongs_to :company, null: false, foreign_key: true
 
       t.timestamps
     end
