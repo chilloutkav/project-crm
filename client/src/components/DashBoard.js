@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CompaniesContainer from "./CompaniesContainer";
 import ContactsContainer from "./ContactsContainer";
 import DealsContainer from "./DealsContainer";
 
 const DashBoard = ({ user }) => {
-  // if (!user) return <HomePage />;
   console.log(user);
   return (
     <>

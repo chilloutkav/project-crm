@@ -13,7 +13,7 @@ class CompaniesController < ApplicationController
     end 
 
     def create 
-        company = @current_user.companies.create!(company_params)
+        company = Company.create!(company_params)
         render json: company, status: :created
     end
 

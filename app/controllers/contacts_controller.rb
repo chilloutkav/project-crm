@@ -13,7 +13,7 @@ class ContactsController < ApplicationController
     end 
 
     def create 
-        contact = @current_user.contacts.create!(contact_params)
+        contact = Contact.create!(contact_params)
         render json: contact, status: :created
     end
 
@@ -32,10 +32,10 @@ class ContactsController < ApplicationController
     private 
 
     def contact_params 
-        params.permit(:name, :email, :lifecycle_stage, :job_title, :user_id, company_id)
+        params.permit(:name, :email, :lifecycle_stage, :job_title, :user_id, :company_id)
     end
 
     def update_contact_params 
-        params.permit(:name, :email, :lifecycle_stage, :job_title, :user_id, company_id)
+        params.permit(:name, :email, :lifecycle_stage, :job_title, :user_id, :company_id)
     end
 end

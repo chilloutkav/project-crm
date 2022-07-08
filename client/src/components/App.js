@@ -28,7 +28,10 @@ function App() {
       <NavBar setUser={setUser} />
       <Routes>
         <Route exact path="/" element={<HomePage user={user} />} />
-        <Route path="/dashboard" element={<DashBoard user={user} />} />
+        <Route
+          path="/dashboard"
+          element={<DashBoard user={user} fetchUser={fetchUser} />}
+        />
         <Route path="/login" element={<SignUpLoginPage onLogin={setUser} />} />
       </Routes>
     </>

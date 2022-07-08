@@ -13,7 +13,7 @@ class DealsController < ApplicationController
     end 
 
     def create 
-        deal = @current_user.deals.create!(deal_params)
+        deal = Deal.create!(deal_params)
         render json: deal, status: :created
     end
 
