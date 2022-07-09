@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "../styles/navBar.css";
 
 const NavBar = ({ setUser }) => {
   function handleLogout() {
@@ -12,7 +13,7 @@ const NavBar = ({ setUser }) => {
     });
   }
   return (
-    <div>
+    <div id="navBar">
       <div>
         <Link to="/">
           <p>Homepage</p>
@@ -20,9 +21,9 @@ const NavBar = ({ setUser }) => {
         <Link to="/dashboard">
           <p>Dashboard</p>
         </Link>
-        <p>Contacts</p>
-        <p>Companies</p>
-        <p>Deals</p>
+        <Link to="/contacts">
+          <p>Contacts</p>
+        </Link>
         <Link to="/login">
           <p>Login</p>
         </Link>

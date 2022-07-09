@@ -1,16 +1,32 @@
-import React, { useEffect } from "react";
-import CompaniesContainer from "./CompaniesContainer";
-import ContactsContainer from "./ContactsContainer";
+import React, { useEffect, useState } from "react";
 import DealsContainer from "./DealsContainer";
 
 const DashBoard = ({ user }) => {
+  const [deals, setDeals] = useState([]);
+
+  const getDeals = () => {
+    fetch("/deals")
+      .then((response) => response.json())
+      .then((response) => {
+        setDeals(
+          response.filter((deal) => {
+            if (deal.user.id === user.id) return deals;
+          })
+        );
+      })
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    getDeals();
+  }, []);
+
   console.log(user);
   return (
     <>
       <h1>Hello {user.first_name}</h1>
-      <ContactsContainer user={user} />
-      <CompaniesContainer user={user} />
-      <DealsContainer user={user} />
+
+      <DealsContainer user={user} deals={deals} />
     </>
   );
 };

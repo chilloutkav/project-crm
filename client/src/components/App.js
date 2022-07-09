@@ -4,6 +4,8 @@ import NavBar from "./NavBar";
 import HomePage from "./HomePage";
 import DashBoard from "./DashBoard";
 import SignUpLoginPage from "./SignUpLoginPage";
+import ContactsContainer from "./ContactsContainer";
+import "../App.css";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -24,7 +26,7 @@ function App() {
   // if (!user) return <HomePage onLogin={setUser} />;
 
   return (
-    <>
+    <div className="App">
       <NavBar setUser={setUser} />
       <Routes>
         <Route exact path="/" element={<HomePage user={user} />} />
@@ -33,8 +35,10 @@ function App() {
           element={<DashBoard user={user} fetchUser={fetchUser} />}
         />
         <Route path="/login" element={<SignUpLoginPage onLogin={setUser} />} />
+        <Route path="/contacts" element={<ContactsContainer user={user} />} />
+        <Route path="/deals element={} " />
       </Routes>
-    </>
+    </div>
   );
 }
 
