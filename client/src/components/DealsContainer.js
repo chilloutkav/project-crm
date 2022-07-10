@@ -3,7 +3,7 @@ import DealCard from "./DealCard";
 import AddNewDealModal from "./AddNewDealModal";
 import "../styles/dealsContainer.css";
 
-const DealsContainer = ({ user, deals }) => {
+const DealsContainer = ({ user, deals, getDeals }) => {
   let newDealAmount = 0;
   let progressDealAmount = 0;
   let closedDealAmount = 0;
@@ -74,7 +74,7 @@ const DealsContainer = ({ user, deals }) => {
       <div>
         <h2>Deals</h2>
         {deals.map((deal) => {
-          return <DealCard deal={deal} />;
+          return <DealCard deal={deal} getDeals={getDeals} />;
         })}
       </div>
       <div>

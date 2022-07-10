@@ -1,4 +1,5 @@
 import React from "react";
+import { useLinkClickHandler } from "react-router-dom";
 import "../styles/addNewDeal.css";
 
 const AddNewDealModal = () => {
@@ -16,3 +17,5 @@ const AddNewDealModal = () => {
 };
 
 export default AddNewDealModal;
+
+// Modal Displays with correct form when the button is clicked
