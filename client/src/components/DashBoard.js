@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
+import AddNewDealForm from "./AddNewDealForm";
 import DealsContainer from "./DealsContainer";
 
 const DashBoard = ({ user }) => {
   const [deals, setDeals] = useState([]);
+
+  const onAddDeal = (newDeal) => {
+    const displayedDeals = [...deals, newDeal];
+    setDeals(displayedDeals);
+  };
 
   const getDeals = () => {
     fetch("/deals")
@@ -27,6 +33,7 @@ const DashBoard = ({ user }) => {
       <h1>Hello {user.first_name}</h1>
 
       <DealsContainer user={user} deals={deals} />
+      <AddNewDealForm onAddDeal={onAddDeal} />
     </>
   );
 };
