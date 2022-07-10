@@ -44,7 +44,6 @@ const ContactsContainer = ({ user }) => {
           ))}
         </tbody>
       </table>
-      <
     </>
   );
 };

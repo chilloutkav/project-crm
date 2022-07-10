@@ -74,7 +74,7 @@ const DealsContainer = ({ user, deals, getDeals }) => {
       <div>
         <h2>Deals</h2>
         {deals.map((deal) => {
-          return <DealCard deal={deal} getDeals={getDeals} />;
+          return <DealCard key={deal.id} deal={deal} getDeals={getDeals} />;
         })}
       </div>
       <div>

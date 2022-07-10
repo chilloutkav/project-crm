@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 
-const AddNewDealForm = ({ onAddDeal }) => {
+const AddNewDealForm = ({ onAddDeal, user }) => {
   const [dealName, setDealName] = useState("");
+  const [dealContact, setDealContact] = useState("");
   const [dealStage, setDealStage] = useState("");
   const [dealAmount, setDealAmount] = useState("");
 
@@ -16,12 +17,15 @@ const AddNewDealForm = ({ onAddDeal }) => {
         deal_name: dealName,
         deal_stage: dealStage,
         amount: parseInt(dealAmount),
-        user_id: 1,
-        contact_id: 1,
+        user_id: user.id,
+        contact_id: dealContact,
       }),
-    })
-      .then((r) => r.json())
-      .then((newDeal) => onAddDeal(newDeal));
+    }).then((r) => {
+      if (r.ok) {
+        e.target.reset();
+        r.json().then((newDeal) => onAddDeal(newDeal));
+      }
+    });
   }
 
   return (
@@ -35,6 +39,24 @@ const AddNewDealForm = ({ onAddDeal }) => {
           value={dealName}
           onChange={(e) => setDealName(e.target.value)}
         />
+        <label>Which Contact?</label>
+        <select
+          name="dealContact"
+          id="dealContact"
+          defaultValue={"default"}
+          onChange={(e) => setDealContact(e.target.value)}
+        >
+          <option value="default" disabled>
+            Choose Contact
+          </option>
+          {user.contacts.map((contact) => {
+            return (
+              <option key={contact.id} value={contact.id}>
+                {contact.name}
+              </option>
+            );
+          })}
+        </select>
         <label>Enter your Deal Stage</label>
         <select
           name="dealStage"
@@ -42,7 +64,9 @@ const AddNewDealForm = ({ onAddDeal }) => {
           defaultValue={"default"}
           onChange={(e) => setDealStage(e.target.value)}
         >
-          <option value="default">Choose Here</option>
+          <option value="default" disabled>
+            Choose Here
+          </option>
           <option value="Appointment Scheduled">Appointment Scheduled</option>
           <option value="Qualified to Buy">Qualified to Buy</option>
           <option value="Presentation Scheduled">Presentation Scheduled</option>

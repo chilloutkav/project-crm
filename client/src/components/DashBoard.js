@@ -33,7 +33,7 @@ const DashBoard = ({ user }) => {
       <h1>Hello {user.first_name}</h1>
 
       <DealsContainer user={user} deals={deals} getDeals={getDeals} />
-      <AddNewDealForm onAddDeal={onAddDeal} />
+      <AddNewDealForm onAddDeal={onAddDeal} user={user} />
     </>
   );
 };
