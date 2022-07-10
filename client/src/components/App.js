@@ -35,8 +35,10 @@ function App() {
           element={<DashBoard user={user} fetchUser={fetchUser} />}
         />
         <Route path="/login" element={<SignUpLoginPage onLogin={setUser} />} />
-        <Route path="/contacts" element={<ContactsContainer user={user} />} />
-        <Route path="/deals element={} " />
+        <Route
+          path="/dashboard/contacts"
+          element={<ContactsContainer user={user} />}
+        />
       </Routes>
     </div>
   );
