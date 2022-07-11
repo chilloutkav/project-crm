@@ -5,6 +5,7 @@ import HomePage from "./HomePage";
 import DashBoard from "./DashBoard";
 import SignUpLoginPage from "./SignUpLoginPage";
 import ContactsContainer from "./ContactsContainer";
+import ContactsPage from "./ContactsPage";
 import ModalPopover from "./ModalPopover";
 import "../App.css";
 
@@ -52,6 +53,7 @@ function App() {
           path="/dashboard/contacts"
           element={<ContactsContainer user={user} />}
         />
+        <Route path="/dashboard/contacts/:id" element={<ContactsPage />} />
       </Routes>
     </div>
   );

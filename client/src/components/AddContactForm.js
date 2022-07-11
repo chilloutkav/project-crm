@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../styles/addContactModal.css";
 
 const AddContactForm = ({ user, onAddContact }) => {
   const [contactName, setContactName] = useState("");
@@ -6,6 +7,11 @@ const AddContactForm = ({ user, onAddContact }) => {
   const [contactlifecycle, setContactLifecycle] = useState("");
   const [contactTitle, setContactTitle] = useState("");
   const [contactCompany, setContactCompany] = useState("");
+
+  const closeModalHandler = () => {
+    document.querySelector(".addContactModal").style.display = "none";
+    document.getElementById("lightBoxBg").style.display = "none";
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -31,7 +37,7 @@ const AddContactForm = ({ user, onAddContact }) => {
   }
 
   return (
-    <>
+    <div className="addContactModal">
       <h1>Add a Contact!</h1>
       <form onSubmit={handleSubmit}>
         <label>Enter your Contact Name</label>
@@ -82,9 +88,10 @@ const AddContactForm = ({ user, onAddContact }) => {
           value={contactCompany}
           onChange={(e) => setContactCompany(e.target.value)}
         />
-        <button type="submit">Add Deal!</button>
+        <button type="submit">Add Contact!</button>
       </form>
-    </>
+      <button onClick={closeModalHandler}>close</button>
+    </div>
   );
 };
 

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AddContactForm from "./AddContactForm";
+import { Link } from "react-router-dom";
+import "../styles/dealsContainer.css";
 
 const ContactsContainer = ({ user }) => {
   const [contacts, setContacts] = useState([]);
@@ -22,14 +24,22 @@ const ContactsContainer = ({ user }) => {
       .catch((error) => console.log(error));
   };
 
+  const addContactModal = () => {
+    document.querySelector(".addContactModal").style.display = "flex";
+    document.getElementById("lightBoxBg").style.display = "flex";
+  };
+
   useEffect(() => {
     getContacts();
   }, []);
 
   return (
     <>
+      <div id="lightBoxBg"></div>
       <h1>Your Contacts</h1>
       <p>{contacts.length} Contacts</p>
+      <button onClick={addContactModal}>Add Contact</button>
+      <AddContactForm onAddContact={onAddContact} user={user} />
       <table>
         <thead>
           <tr>
@@ -37,7 +47,7 @@ const ContactsContainer = ({ user }) => {
             <th>Email</th>
             <th>Job Title</th>
             <th>Lifecycle Stage</th>
-            <th>Edit</th>
+            <th>Details</th>
           </tr>
         </thead>
         <tbody>
@@ -47,12 +57,13 @@ const ContactsContainer = ({ user }) => {
               <td>{contact.email}</td>
               <td>{contact.job_title}</td>
               <td>{contact.lifecycle_stage}</td>
-              <button>Edit Contact</button>
+              <Link to={`/dashboard/contacts/${contact.id}`}>
+                <button>Contact Notes</button>
+              </Link>
             </tr>
           ))}
         </tbody>
       </table>
-      <AddContactForm user={user} onAddContact={onAddContact} />
     </>
   );
 };

@@ -63,6 +63,7 @@ const DealsContainer = ({ user, deals, getDeals, modalHandler }) => {
         <div id="lightBoxBg"></div>
         <h1>Deals Overview</h1>
         <p>Please find your current deals below!</p>
+        <button onClick={addDealModal}>Add New Deal</button>
         <h3>New Deals</h3>
         <p id="new-deal-amount">${newDealAmount}</p>
         <h3>In Progress</h3>
@@ -75,9 +76,6 @@ const DealsContainer = ({ user, deals, getDeals, modalHandler }) => {
         {deals.map((deal) => {
           return <DealCard key={deal.id} deal={deal} getDeals={getDeals} />;
         })}
-      </div>
-      <div>
-        <button onClick={addDealModal}>Add New Deal</button>
       </div>
     </>
   );
