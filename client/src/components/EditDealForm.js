@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/editDealModal.css";
 
-const EditDealForm = ({ id, getDeals }) => {
+const EditDealForm = ({ id, getDeal }) => {
   const [dealStage, setDealStage] = useState("");
   const [dealAmount, setDealAmount] = useState("");
 
@@ -17,7 +17,7 @@ const EditDealForm = ({ id, getDeals }) => {
         amount: parseInt(dealAmount),
       }),
     }).then((r) => r.json());
-    getDeals();
+    getDeal();
   }
 
   return (
