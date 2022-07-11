@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import "../styles/editDealModal.css";
 
-const EditDeal = () => {
+const EditDealForm = ({ id, getDeals }) => {
   const [dealStage, setDealStage] = useState("");
   const [dealAmount, setDealAmount] = useState("");
 
@@ -15,13 +16,12 @@ const EditDeal = () => {
         deal_stage: dealStage,
         amount: parseInt(dealAmount),
       }),
-    })
-      .then((r) => r.json())
-      .then((newDeal) => onAddDeal(newDeal));
+    }).then((r) => r.json());
+    getDeals();
   }
 
   return (
-    <>
+    <div>
       <h1>Edit Deal!</h1>
       <form onSubmit={handleSubmit}>
         <label>Enter your Deal Stage</label>
@@ -51,8 +51,8 @@ const EditDeal = () => {
         />
         <button type="submit">Edit Deal!</button>
       </form>
-    </>
+    </div>
   );
 };
 
-export default EditDeal;
+export default EditDealForm;

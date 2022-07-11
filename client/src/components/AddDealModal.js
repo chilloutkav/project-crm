@@ -1,0 +1,100 @@
+import React, { useState } from "react";
+import "../styles/addDealModal.css";
+
+const AddDealModal = ({ user, onAddDeal }) => {
+  const [dealName, setDealName] = useState("");
+  const [dealContact, setDealContact] = useState("");
+  const [dealStage, setDealStage] = useState("");
+  const [dealAmount, setDealAmount] = useState("");
+
+  const closeModalHandler = () => {
+    document.querySelector(".addDealModal").style.display = "none";
+    document.getElementById("lightBoxBg").style.display = "none";
+  };
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    fetch("/deals", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        deal_name: dealName,
+        deal_stage: dealStage,
+        amount: parseInt(dealAmount),
+        user_id: user.id,
+        contact_id: dealContact,
+      }),
+    }).then((r) => {
+      if (r.ok) {
+        e.target.reset();
+        r.json().then((newDeal) => onAddDeal(newDeal));
+      }
+    });
+  }
+
+  return (
+    <div className="addDealModal">
+      <h1>Add a Deal!</h1>
+      <form onSubmit={handleSubmit}>
+        <label>Enter your Deal Name</label>
+        <input
+          type="text"
+          id="dealName"
+          value={dealName}
+          onChange={(e) => setDealName(e.target.value)}
+        />
+        <label>Which Contact?</label>
+        <select
+          name="dealContact"
+          id="dealContact"
+          defaultValue={"default"}
+          onChange={(e) => setDealContact(e.target.value)}
+        >
+          <option value="default" disabled>
+            Choose Contact
+          </option>
+          {user.contacts.map((contact) => {
+            return (
+              <option key={contact.id} value={contact.id}>
+                {contact.name}
+              </option>
+            );
+          })}
+        </select>
+        <label>Enter your Deal Stage</label>
+        <select
+          name="dealStage"
+          id="dealStage"
+          defaultValue={"default"}
+          onChange={(e) => setDealStage(e.target.value)}
+        >
+          <option value="default" disabled>
+            Choose Here
+          </option>
+          <option value="Appointment Scheduled">Appointment Scheduled</option>
+          <option value="Qualified to Buy">Qualified to Buy</option>
+          <option value="Presentation Scheduled">Presentation Scheduled</option>
+          <option value="Decision Maker Bought-In">
+            Decision Maker Bought-In
+          </option>
+          <option value="Contract Sent">Contract Sent</option>
+          <option value="Closed Won">Closed Won</option>
+          <option value="Closed Lost">Closed Lost</option>
+        </select>
+        <label>Amount</label>
+        <input
+          type="text"
+          id="dealAmount"
+          value={dealAmount}
+          onChange={(e) => setDealAmount(e.target.value)}
+        />
+        <button type="submit">Add Deal!</button>
+      </form>
+      <button onClick={closeModalHandler}>close</button>
+    </div>
+  );
+};
+
+export default AddDealModal;

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import AddNewDealForm from "./AddNewDealForm";
 import DealsContainer from "./DealsContainer";
+import AddDealModal from "./AddDealModal";
 
-const DashBoard = ({ user }) => {
+const DashBoard = ({ user, modalHandler }) => {
   const [deals, setDeals] = useState([]);
 
   const onAddDeal = (newDeal) => {
@@ -32,8 +33,13 @@ const DashBoard = ({ user }) => {
     <>
       <h1>Hello {user.first_name}</h1>
 
-      <DealsContainer user={user} deals={deals} getDeals={getDeals} />
-      <AddNewDealForm onAddDeal={onAddDeal} user={user} />
+      <DealsContainer
+        user={user}
+        deals={deals}
+        getDeals={getDeals}
+        modalHandler={modalHandler}
+      />
+      <AddDealModal onAddDeal={onAddDeal} user={user} />
     </>
   );
 };

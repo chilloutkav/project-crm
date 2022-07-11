@@ -38,6 +38,6 @@ class DealsController < ApplicationController
     end
 
     def update_deal_params 
-        params.permit(:deal_name, :deal_stage, :amount, :user_id, :contact_id)
+        params.permit(:deal_stage, :amount)
     end
 end

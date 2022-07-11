@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
+import AddContactForm from "./AddContactForm";
 
 const ContactsContainer = ({ user }) => {
   const [contacts, setContacts] = useState([]);
+
+  const onAddContact = (newContact) => {
+    const displayedContacts = [...contacts, newContact];
+    setContacts(displayedContacts);
+  };
 
   const getContacts = () => {
     fetch("/contacts")
@@ -31,6 +37,7 @@ const ContactsContainer = ({ user }) => {
             <th>Email</th>
             <th>Job Title</th>
             <th>Lifecycle Stage</th>
+            <th>Edit</th>
           </tr>
         </thead>
         <tbody>
@@ -40,10 +47,12 @@ const ContactsContainer = ({ user }) => {
               <td>{contact.email}</td>
               <td>{contact.job_title}</td>
               <td>{contact.lifecycle_stage}</td>
+              <button>Edit Contact</button>
             </tr>
           ))}
         </tbody>
       </table>
+      <AddContactForm user={user} onAddContact={onAddContact} />
     </>
   );
 };

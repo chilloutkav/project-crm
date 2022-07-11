@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import DealCard from "./DealCard";
-import AddNewDealModal from "./AddNewDealModal";
+import ModalPopover from "./ModalPopover";
 import "../styles/dealsContainer.css";
 
-const DealsContainer = ({ user, deals, getDeals }) => {
+const DealsContainer = ({ user, deals, getDeals, modalHandler }) => {
   let newDealAmount = 0;
   let progressDealAmount = 0;
   let closedDealAmount = 0;
@@ -48,8 +48,8 @@ const DealsContainer = ({ user, deals, getDeals }) => {
     });
   };
 
-  const modalHandler = () => {
-    document.querySelector(".addNewDeal").style.display = "flex";
+  const addDealModal = () => {
+    document.querySelector(".addDealModal").style.display = "flex";
     document.getElementById("lightBoxBg").style.display = "flex";
   };
 
@@ -60,7 +60,6 @@ const DealsContainer = ({ user, deals, getDeals }) => {
   return (
     <>
       <div>
-        {<AddNewDealModal />}
         <div id="lightBoxBg"></div>
         <h1>Deals Overview</h1>
         <p>Please find your current deals below!</p>
@@ -78,7 +77,7 @@ const DealsContainer = ({ user, deals, getDeals }) => {
         })}
       </div>
       <div>
-        <button onClick={modalHandler}>Add New Deal</button>
+        <button onClick={addDealModal}>Add New Deal</button>
       </div>
     </>
   );
