@@ -33,7 +33,7 @@ class NotesController < ApplicationController
         private 
     
         def note_params 
-            params.permit(:title, :details, :contact_id)
+            params.permit(:title, :details, :deal_id)
         end
     
         def update_note_params 

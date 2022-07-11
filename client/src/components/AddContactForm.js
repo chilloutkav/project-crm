@@ -15,7 +15,7 @@ const AddContactForm = ({ user, onAddContact }) => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    fetch("/contact", {
+    fetch("/contacts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +25,7 @@ const AddContactForm = ({ user, onAddContact }) => {
         email: contactEmail,
         lifecycle_stage: contactlifecycle,
         job_title: contactTitle,
-        contact_company: contactCompany,
+        company: contactCompany,
         user_id: user.id,
       }),
     }).then((r) => {

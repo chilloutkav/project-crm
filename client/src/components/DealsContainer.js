@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import DealCard from "./DealCard";
-import ModalPopover from "./ModalPopover";
 import "../styles/dealsContainer.css";
 
 const DealsContainer = ({ user, deals, getDeals, modalHandler }) => {

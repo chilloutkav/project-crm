@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import AddNewDealForm from "./AddNewDealForm";
 import DealsContainer from "./DealsContainer";
 import AddDealModal from "./AddDealModal";
 
