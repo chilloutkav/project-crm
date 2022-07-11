@@ -3,7 +3,7 @@ class User < ApplicationRecord
     
     has_many :contacts
     has_many :deals
-    has_many :notes, through: :contacts
+    has_many :notes, through: :deals
 
     validates :first_name, presence: true
     validates :last_name, presence: true

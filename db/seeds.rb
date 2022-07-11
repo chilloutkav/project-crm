@@ -29,7 +29,7 @@ Deal.create(deal_name: "Promotional Landing Page", deal_stage: "Closed Lost", de
 
 puts "Seeding notes..."
 
-Note.create(title: "Presented Proposal", details: "Proposal went well. We're waiting for a follow-up so we can schedule an appoint with their decision maker", contact_id: 1)
-Note.create(title: "Decision Maker Conversation", details: "We need to make a few changes and remove some things they're not looking for. Looking to send an amended proposal.", contact_id: 1)
-Note.create(title: "Ecommerce Rebuild", details: "Client decided to go a different direction", contact_id: 1)
+Note.create(title: "Presented Proposal", details: "Proposal went well. We're waiting for a follow-up so we can schedule an appoint with their decision maker", deal_id: 1)
+Note.create(title: "Decision Maker Conversation", details: "We need to make a few changes and remove some things they're not looking for. Looking to send an amended proposal.", deal_id: 1)
+Note.create(title: "Ecommerce Rebuild", details: "Client decided to go a different direction", deal_id: 1)
 
