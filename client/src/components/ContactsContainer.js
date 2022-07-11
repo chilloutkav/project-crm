@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AddContactForm from "./AddContactForm";
 import { Link } from "react-router-dom";
 import "../styles/dealsContainer.css";
+import ContactCard from "./ContactCard";
 
 const ContactsContainer = ({ user }) => {
   const [contacts, setContacts] = useState([]);
@@ -40,30 +41,9 @@ const ContactsContainer = ({ user }) => {
       <p>{contacts.length} Contacts</p>
       <button onClick={addContactModal}>Add Contact</button>
       <AddContactForm onAddContact={onAddContact} user={user} />
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Job Title</th>
-            <th>Lifecycle Stage</th>
-            <th>Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          {contacts.map((contact) => (
-            <tr key={contact.id}>
-              <td>{contact.name}</td>
-              <td>{contact.email}</td>
-              <td>{contact.job_title}</td>
-              <td>{contact.lifecycle_stage}</td>
-              <Link to={`/dashboard/contacts/${contact.id}`}>
-                <button>Contact Notes</button>
-              </Link>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {contacts.map((contact) => {
+        return <ContactCard key={contacts.id} contact={contact} />;
+      })}
     </>
   );
 };

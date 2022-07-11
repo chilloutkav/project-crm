@@ -14,18 +14,6 @@ const DealPage = () => {
     setShowEdit(!showEdit);
   }
 
-  const handleDelete = () => {
-    fetch(`/deals/${deal.id}`, {
-      method: "DELETE",
-    }).then((r) => {
-      if (r.ok) {
-        getDeal();
-      } else {
-        r.json().then((err) => alert(err.errors));
-      }
-    });
-  };
-
   const addNoteModal = () => {
     document.querySelector(".addNoteModal").style.display = "flex";
     document.getElementById("lightBoxBg").style.display = "flex";

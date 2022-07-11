@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const ContactsPage = () => {
   const [contact, setContact] = useState({ deals: [], notes: [] });
@@ -33,17 +34,8 @@ const ContactsPage = () => {
           <div>
             <h3>{deal.deal_name}</h3>
             <p>{deal.deal_stage}</p>
-            <p>{deal.deal_stage}</p>
             <p>{"$" + deal.amount.toLocaleString()}</p>
-          </div>
-        );
-      })}
-      <h2>Notes</h2>
-      {contact.notes.map((note) => {
-        return (
-          <div>
-            <h>{note.title}</h>
-            <p>{note.details}</p>
+            <Link to={`/dashboard/deals/${deal.id}`}>Deal Details</Link>
           </div>
         );
       })}
