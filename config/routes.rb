@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resources :users, only: [:create, :show]
   resources :deals
   resources :contacts
-  resources :companies
+  resources :notes
 
   post "/signup", to: "users#create"
   post "/login", to: "sessions#create"

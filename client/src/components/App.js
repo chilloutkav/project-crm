@@ -7,6 +7,7 @@ import SignUpLoginPage from "./SignUpLoginPage";
 import ContactsContainer from "./ContactsContainer";
 import ContactsPage from "./ContactsPage";
 import ModalPopover from "./ModalPopover";
+import DealPage from "./DealPage";
 import "../App.css";
 
 function App() {
@@ -30,7 +31,7 @@ function App() {
     document.getElementById("lightBoxBg").style.display = "flex";
   };
 
-  // if (!user) return <HomePage onLogin={setUser} />;
+  if (!user) return <HomePage onLogin={setUser} />;
 
   return (
     <div className="App">
@@ -49,6 +50,7 @@ function App() {
           }
         />
         <Route path="/login" element={<SignUpLoginPage onLogin={setUser} />} />
+        <Route path="/dashboard/deals/:id" element={<DealPage />} />
         <Route
           path="/dashboard/contacts"
           element={<ContactsContainer user={user} />}

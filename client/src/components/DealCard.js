@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import EditDealForm from "./EditDealForm";
+import DealPage from "./DealPage";
 
 const DealCard = ({ deal, getDeals }) => {
   const [showEdit, setShowEdit] = useState(true);
@@ -30,6 +32,9 @@ const DealCard = ({ deal, getDeals }) => {
       {<button onClick={editButtonHandler}>Edit Deal</button>}
       {showEdit ? null : <EditDealForm id={deal.id} getDeals={getDeals} />}
       <button onClick={handleDelete}>Delete</button>
+      <Link to={`/dashboard/deals/${deal.id}`}>
+        <button>Details</button>
+      </Link>
     </>
   );
 };
