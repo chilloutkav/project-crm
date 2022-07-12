@@ -1,8 +1,31 @@
 import React, { useState, useEffect } from "react";
-import DealCard from "./DealCard";
+import DealsList from "./DealsList";
 import "../styles/dealsContainer.css";
+import DealSearch from "./DealSearch";
+import AddDealModal from "./AddDealModal";
 
-const DealsContainer = ({ user, deals, getDeals, modalHandler }) => {
+const DealsContainer = ({ user }) => {
+  const [deals, setDeals] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const onAddDeal = (newDeal) => {
+    const displayedDeals = [...deals, newDeal];
+    setDeals(displayedDeals);
+  };
+
+  const getDeals = () => {
+    fetch("/deals")
+      .then((response) => response.json())
+      .then((response) => {
+        setDeals(
+          response.filter((deal) => {
+            if (deal.user.id === user.id) return deals;
+          })
+        );
+      })
+      .catch((error) => console.log(error));
+  };
+
   let newDealAmount = 0;
   let progressDealAmount = 0;
   let closedDealAmount = 0;
@@ -52,6 +75,14 @@ const DealsContainer = ({ user, deals, getDeals, modalHandler }) => {
     document.getElementById("lightBoxBg").style.display = "flex";
   };
 
+  const displayedDeals = deals.filter((deal) => {
+    return deal.deal_name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
+  useEffect(() => {
+    getDeals();
+  }, []);
+
   newDealsValue(deals);
   inProgressValue(deals);
   closedValue(deals);
@@ -62,7 +93,6 @@ const DealsContainer = ({ user, deals, getDeals, modalHandler }) => {
         <div id="lightBoxBg"></div>
         <h1>Deals Overview</h1>
         <p>Please find your current deals below!</p>
-        <button onClick={addDealModal}>Add New Deal</button>
         <h3>New Deals</h3>
         <p id="new-deal-amount">${newDealAmount}</p>
         <h3>In Progress</h3>
@@ -72,9 +102,10 @@ const DealsContainer = ({ user, deals, getDeals, modalHandler }) => {
       </div>
       <div>
         <h2>Deals</h2>
-        {deals.map((deal) => {
-          return <DealCard key={deal.id} deal={deal} getDeals={getDeals} />;
-        })}
+        <button onClick={addDealModal}>Add New Deal</button>
+        <AddDealModal user={user} onAddDeal={onAddDeal} />
+        <DealSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+        <DealsList deals={displayedDeals} getDeals={getDeals} />
       </div>
     </>
   );

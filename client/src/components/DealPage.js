@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import AddDealModal from "./AddDealModal";
 import AddNoteModal from "./AddNoteModal";
 import EditDealForm from "./EditDealForm";
@@ -39,9 +39,12 @@ const DealPage = () => {
       <h1>{deal.deal_name}</h1>
       <p>{deal.deal_stage}</p>
       <p>{"$" + deal.amount.toLocaleString()}</p>
-      <p>
-        {deal.contact.name} - {deal.contact.job_title}
-      </p>
+      <Link to={`/dashboard/contacts/${deal.contact.id}`}>
+        <p>
+          {deal.contact.name} - {deal.contact.job_title}
+        </p>
+      </Link>
+
       <p>{deal.contact.company}</p>
       {<button onClick={editButtonHandler}>Edit Deal</button>}
       {showEdit ? null : <EditDealForm id={deal.id} getDeal={getDeal} />}

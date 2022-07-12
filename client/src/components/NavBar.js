@@ -24,6 +24,10 @@ const NavBar = ({ setUser }) => {
         <Link to="/dashboard/contacts">
           <p>Contacts</p>
         </Link>
+        <Link to="/dashboard/deals">
+          <p>Deals</p>
+        </Link>
+
         <Link to="/login">
           <p>Login</p>
         </Link>

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import AddContactForm from "./AddContactForm";
-import { Link } from "react-router-dom";
+import ContactSearch from "./ContactSearch";
 import "../styles/dealsContainer.css";
-import ContactCard from "./ContactCard";
+import ContactsList from "./ContactsList";
 
 const ContactsContainer = ({ user }) => {
   const [contacts, setContacts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const onAddContact = (newContact) => {
     const displayedContacts = [...contacts, newContact];
@@ -30,6 +31,10 @@ const ContactsContainer = ({ user }) => {
     document.getElementById("lightBoxBg").style.display = "flex";
   };
 
+  const displayedContacts = contacts.filter((contact) => {
+    return contact.name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   useEffect(() => {
     getContacts();
   }, []);
@@ -39,11 +44,10 @@ const ContactsContainer = ({ user }) => {
       <div id="lightBoxBg"></div>
       <h1>Your Contacts</h1>
       <p>{contacts.length} Contacts</p>
+      <ContactSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       <button onClick={addContactModal}>Add Contact</button>
       <AddContactForm onAddContact={onAddContact} user={user} />
-      {contacts.map((contact) => {
-        return <ContactCard key={contacts.id} contact={contact} />;
-      })}
+      <ContactsList contacts={displayedContacts} />
     </>
   );
 };
