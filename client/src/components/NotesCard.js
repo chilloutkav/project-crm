@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../styles/notesCard.css";
 
 const NotesCard = ({ note, getDeal }) => {
   const [updatedNote, setUpdatedNote] = useState({});
@@ -26,7 +27,7 @@ const NotesCard = ({ note, getDeal }) => {
   };
 
   return (
-    <div>
+    <div className="notes-card">
       <h3>{note.title}</h3>
       <p>{note.details}</p>
       <button onClick={handleDelete}>Delete</button>

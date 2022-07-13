@@ -1,8 +1,9 @@
 import React from "react";
+import "../styles/contactSearch.css";
 
 const ContactSearch = ({ searchTerm, onSearchChange }) => {
   return (
-    <div>
+    <div className="contact__contact-search">
       <label>Search Contacts:</label>
       <input
         type="text"

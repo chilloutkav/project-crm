@@ -1,0 +1,16 @@
+.signUpLoginPage-wrapper {
+  border: 1px solid black;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: calc(33% - 20px);
+  margin: 10rem auto;
+}
+
+#sign-log-btn {
+  border: none;
+  padding: 15px 25px;
+  margin: 15px auto;
+}

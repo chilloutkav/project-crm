@@ -3,10 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import NavBar from "./NavBar";
 import HomePage from "./HomePage";
 import DashBoard from "./DashBoard";
-import SignUpLoginPage from "./SignUpLoginPage";
 import ContactsContainer from "./ContactsContainer";
 import ContactsPage from "./ContactsPage";
-import ModalPopover from "./ModalPopover";
 import DealPage from "./DealPage";
 import DealsContainer from "./DealsContainer";
 import "../App.css";
@@ -32,14 +30,12 @@ function App() {
     document.getElementById("lightBoxBg").style.display = "flex";
   };
 
-  // if (!user) return <HomePage onLogin={setUser} />;
+  if (!user) return <HomePage onLogin={setUser} />;
 
   return (
     <div className="App">
-      {<ModalPopover user={user} />}
       <NavBar setUser={setUser} />
       <Routes>
-        <Route exact path="/" element={<HomePage user={user} />} />
         <Route
           path="/dashboard"
           element={
@@ -50,7 +46,6 @@ function App() {
             />
           }
         />
-        <Route path="/login" element={<SignUpLoginPage onLogin={setUser} />} />
         <Route
           path="/dashboard/deals"
           element={<DealsContainer user={user} />}

@@ -1,0 +1,21 @@
+.contact__contact-card {
+  border: none;
+  background-color: rgba(195, 195, 195, 0.8);
+  border-radius: 2px;
+  width: calc(25% - 60px);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  align-items: center;
+}
+
+.contact__contact-card button {
+  border: none;
+  padding: 15px 25px;
+}
+
+.contact__contact-card__email a {
+  text-decoration: underline;
+  color: #0008;
+}

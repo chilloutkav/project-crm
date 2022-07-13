@@ -90,7 +90,9 @@ const AddDealModal = ({ user, onAddDeal }) => {
           value={dealAmount}
           onChange={(e) => setDealAmount(e.target.value)}
         />
-        <button type="submit">Add Deal!</button>
+        <button id="add-deal-btn" type="submit">
+          Add Deal!
+        </button>
       </form>
       <button onClick={closeModalHandler}>close</button>
     </div>

@@ -6,3 +6,46 @@
   background-color: rgba(000, 000, 000, 0.7);
   display: none;
 }
+
+.deals-overview {
+  border: 1px solid rgba(195, 195, 195, 0.8);
+  box-shadow: 2px 2px 2px rgba(195, 195, 195, 0.8);
+  width: calc(100% - 90px);
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  padding: 45px;
+}
+
+.deals-overview > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid rgba(195, 195, 195, 0.8);
+  border-radius: 2px;
+  background-color: rgba(195, 195, 195, 0.8);
+  min-width: calc(33.33% - 20px);
+}
+
+.add-search-wrapper {
+  margin-top: 50px;
+}
+
+.add-search-wrapper h2 {
+  letter-spacing: 1px;
+}
+
+.add-search-wrapper > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-bottom: 30px;
+}
+
+.add-search-wrapper > div button {
+  letter-spacing: 1px;
+  border: none;
+  border-radius: 5px;
+  padding: 15px 25px;
+}

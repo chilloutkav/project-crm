@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Error from "./Error";
 
 const Login = ({ onLogin }) => {
@@ -7,6 +7,7 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  let navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -20,7 +21,10 @@ const Login = ({ onLogin }) => {
     }).then((r) => {
       setIsLoading(false);
       if (r.ok) {
-        r.json().then((user) => onLogin(user));
+        r.json().then((user) => {
+          onLogin(user);
+          navigate("/dashboard");
+        });
       } else {
         r.json().then((err) => setErrors(err.errors));
       }

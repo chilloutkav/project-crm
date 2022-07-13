@@ -1,8 +1,9 @@
 import React from "react";
+import "../styles/dealSearch.css";
 
 const DealSearch = ({ searchTerm, onSearchChange }) => {
   return (
-    <div>
+    <div id="deal-search">
       <label>Search Deals:</label>
       <input
         type="text"

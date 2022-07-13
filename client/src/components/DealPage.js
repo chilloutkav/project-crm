@@ -4,6 +4,7 @@ import AddDealModal from "./AddDealModal";
 import AddNoteModal from "./AddNoteModal";
 import EditDealForm from "./EditDealForm";
 import NotesCard from "./NotesCard";
+import "../styles/dealPage.css";
 
 const DealPage = () => {
   const [deal, setDeal] = useState({ notes: [], contact: [], amount: "" });
@@ -35,7 +36,7 @@ const DealPage = () => {
   console.log(deal);
 
   return (
-    <>
+    <div className="deal-page">
       <h1>{deal.deal_name}</h1>
       <p>{deal.deal_stage}</p>
       <p>{"$" + deal.amount.toLocaleString()}</p>
@@ -51,14 +52,17 @@ const DealPage = () => {
       <h2>Notes</h2>
       <button onClick={addNoteModal}>Add New Note</button>
       <AddNoteModal deal={deal} getDeal={getDeal} />
-      {deal.notes.map((note) => {
-        return (
-          <div>
-            <NotesCard note={note} amount={deal.amount} getDeal={getDeal} />
-          </div>
-        );
-      })}
-    </>
+
+      <div className="notes-card-wrapper">
+        {deal.notes.map((note) => {
+          return (
+            <div>
+              <NotesCard note={note} amount={deal.amount} getDeal={getDeal} />
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 

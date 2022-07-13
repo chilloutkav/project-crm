@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import "../styles/contactsPage.css";
 
 const ContactsPage = () => {
   const [contact, setContact] = useState({ deals: [], notes: [] });
@@ -29,16 +30,21 @@ const ContactsPage = () => {
       <p>{contact.job_title}</p>
       <p>{contact.company}</p>
       <h2>Deals</h2>
-      {contact.deals.map((deal) => {
-        return (
-          <div>
-            <h3>{deal.deal_name}</h3>
-            <p>{deal.deal_stage}</p>
-            <p>{"$" + deal.amount.toLocaleString()}</p>
-            <Link to={`/dashboard/deals/${deal.id}`}>Deal Details</Link>
-          </div>
-        );
-      })}
+      <div className="contact-page_deal-wrap">
+        {contact.deals.map((deal) => {
+          return (
+            <div className="contact-page_deal-card">
+              <h3>{deal.deal_name}</h3>
+              <p>{deal.deal_stage}</p>
+              <p>{"$" + deal.amount.toLocaleString()}</p>
+
+              <Link to={`/dashboard/deals/${deal.id}`}>
+                <button>Deal Details</button>
+              </Link>
+            </div>
+          );
+        })}
+      </div>
     </>
   );
 };

@@ -88,7 +88,9 @@ const AddContactForm = ({ user, onAddContact }) => {
           value={contactCompany}
           onChange={(e) => setContactCompany(e.target.value)}
         />
-        <button type="submit">Add Contact!</button>
+        <button id="add-contact-btn" type="submit">
+          Add Contact!
+        </button>
       </form>
       <button onClick={closeModalHandler}>close</button>
     </div>

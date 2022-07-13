@@ -93,20 +93,30 @@ const DealsContainer = ({ user }) => {
         <div id="lightBoxBg"></div>
         <h1>Deals Overview</h1>
         <p>Please find your current deals below!</p>
-        <h3>New Deals</h3>
-        <p id="new-deal-amount">${newDealAmount}</p>
-        <h3>In Progress</h3>
-        <p id="in-progress-amount">${progressDealAmount}</p>
-        <h3>Closed</h3>
-        <p id="closed-amount">${closedDealAmount}</p>
+        <div className="deals-overview">
+          <div>
+            <h3>New Deals</h3>
+            <p id="new-deal-amount">${newDealAmount}</p>
+          </div>
+          <div>
+            <h3>In Progress</h3>
+            <p id="in-progress-amount">${progressDealAmount}</p>
+          </div>
+          <div>
+            <h3>Closed</h3>
+            <p id="closed-amount">${closedDealAmount}</p>
+          </div>
+        </div>
       </div>
-      <div>
+      <div className="add-search-wrapper">
         <h2>Deals</h2>
-        <button onClick={addDealModal}>Add New Deal</button>
-        <AddDealModal user={user} onAddDeal={onAddDeal} />
-        <DealSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-        <DealsList deals={displayedDeals} getDeals={getDeals} />
+        <div>
+          <button onClick={addDealModal}>Add New Deal</button>
+          <AddDealModal user={user} onAddDeal={onAddDeal} />
+          <DealSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+        </div>
       </div>
+      <DealsList deals={displayedDeals} getDeals={getDeals} />
     </>
   );
 };

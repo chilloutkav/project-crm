@@ -49,7 +49,9 @@ const AddNoteModal = ({ deal, getDeal }) => {
           value={noteDetails}
           onChange={(e) => setNoteDetails(e.target.value)}
         />
-        <button type="submit">Add Note!</button>
+        <button id="add-note-btn" type="submit">
+          Add Note!
+        </button>
       </form>
       <button onClick={closeModalHandler}>close</button>
     </div>

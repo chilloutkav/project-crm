@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AddContactForm from "./AddContactForm";
 import ContactSearch from "./ContactSearch";
-import "../styles/dealsContainer.css";
+import "../styles/contactsContainer.css";
 import ContactsList from "./ContactsList";
 
 const ContactsContainer = ({ user }) => {
@@ -43,9 +43,11 @@ const ContactsContainer = ({ user }) => {
     <>
       <div id="lightBoxBg"></div>
       <h1>Your Contacts</h1>
-      <p>{contacts.length} Contacts</p>
+      <p className="contact__contact-count">{contacts.length} Contacts</p>
       <ContactSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-      <button onClick={addContactModal}>Add Contact</button>
+      <button id="add-contact" onClick={addContactModal}>
+        Add Contact
+      </button>
       <AddContactForm onAddContact={onAddContact} user={user} />
       <ContactsList contacts={displayedContacts} />
     </>
