@@ -77,5 +77,13 @@ Deal.create(deal_name:Faker::Movies::BackToTheFuture.quote, deal_stage: "Closed 
 
 puts "Seeding notes..."
 
-Note.create(title:Faker::JapaneseMedia::OnePiece.quote, details:Faker::Lorem.paragraph, deal_id:rand(1..25))
+50.times do |i|
+    Note.create(
+            title:Faker::JapaneseMedia::OnePiece.quote, 
+            details:Faker::Lorem.paragraph, 
+            deal_id:rand(1..25)
+    )
+  end
+
+
 
