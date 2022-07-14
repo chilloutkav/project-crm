@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Error from "./Error";
+import "../styles/login.css";
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState("");
@@ -32,8 +32,8 @@ const Login = ({ onLogin }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <div className="login">
+      <form onSubmit={handleSubmit}>
         <input
           placeholder="Enter username"
           type="text"
@@ -41,8 +41,6 @@ const Login = ({ onLogin }) => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-      </div>
-      <div>
         <input
           placeholder="Enter password"
           type="password"
@@ -50,18 +48,16 @@ const Login = ({ onLogin }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-      </div>
-      <div>
-        <button type="submit" bg="#000080" color="#fff">
+        <button id="login-btn" type="submit" bg="#000080" color="#fff">
           {isLoading ? "Loading..." : "Login"}
         </button>
-      </div>
-      <div>
-        {errors.map((error) => (
-          <Error key={error}>{error}</Error>
-        ))}
-      </div>
-    </form>
+        <div>
+          {errors.map((error) => (
+            <error key={error}>{error}</error>
+          ))}
+        </div>
+      </form>
+    </div>
   );
 };
 

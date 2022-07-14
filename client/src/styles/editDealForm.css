@@ -1,0 +1,18 @@
+/* .edit-deal-wrapper form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: calc(100% - 60px);
+  margin: 0 auto;
+}
+
+.edit-deal-wrapper form label {
+  margin: 10px 0 5px;
+}
+
+.edit-deal-wrapper form input,
+.edit-deal-wrapper form select {
+  width: 20%;
+  padding: 15px 25px;
+} */

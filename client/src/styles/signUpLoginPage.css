@@ -7,6 +7,7 @@
   align-items: center;
   width: calc(33% - 20px);
   margin: 10rem auto;
+  text-align: center;
 }
 
 #sign-log-btn {

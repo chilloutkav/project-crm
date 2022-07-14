@@ -16,8 +16,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_08_155348) do
 
   create_table "contacts", force: :cascade do |t|
     t.string "name"
+    t.string "image_url"
     t.string "email"
-    t.string "lifecycle_stage"
     t.string "job_title"
     t.string "company"
     t.bigint "user_id", null: false

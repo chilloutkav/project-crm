@@ -12,7 +12,7 @@ const DealCard = ({ deal, getDeals }) => {
         {deal.deal_stage}
       </p>
       <p className="deal-card__deal-amount deal-card__deal-wrap">
-        {"$" + deal.amount.toLocaleString()}
+        {"$" + deal.amount}
       </p>
       <p className="deal-card__deal-company deal-card__deal-wrap">
         Company - {deal.contact.company}

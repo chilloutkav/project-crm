@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/editDealModal.css";
+import "../styles/editDealForm.css";
 
 const EditDealForm = ({ id, getDeal }) => {
   const [dealStage, setDealStage] = useState("");
@@ -21,7 +21,7 @@ const EditDealForm = ({ id, getDeal }) => {
   }
 
   return (
-    <div>
+    <div className="edit-deal-wrapper">
       <h1>Edit Deal!</h1>
       <form onSubmit={handleSubmit}>
         <label>Enter your Deal Stage</label>

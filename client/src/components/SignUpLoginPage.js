@@ -9,26 +9,22 @@ const SignUpLoginPage = ({ onLogin }) => {
   return (
     <div className="signUpLoginPage-wrapper">
       {showLogin ? (
-        <div>
+        <div className="signUpLoginPage-wrapper_content">
           <h1>Welcome Back!</h1>
           <Login onLogin={onLogin} />
-          <p>
-            Don't have an Account?
-            <button id="sign-log-btn" onClick={() => setShowLogin(false)}>
-              Sign up!
-            </button>
-          </p>
+          <p>Don't have an Account?</p>
+          <button id="sign-log-btn" onClick={() => setShowLogin(false)}>
+            Sign up!
+          </button>
         </div>
       ) : (
-        <div>
+        <div className="signUpLoginPage-wrapper_content">
           <h1>Sign Up Below!</h1>
           <SignUp onLogin={onLogin} />
-          <p>
-            Already have an account?
-            <button id="sign-log-btn" onClick={() => setShowLogin(true)}>
-              Login!
-            </button>
-          </p>
+          <p>Already have an account?</p>
+          <button id="sign-log-btn" onClick={() => setShowLogin(true)}>
+            Login!
+          </button>
         </div>
       )}
     </div>

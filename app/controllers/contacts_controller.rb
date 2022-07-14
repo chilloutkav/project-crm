@@ -32,10 +32,10 @@ class ContactsController < ApplicationController
     private 
 
     def contact_params 
-        params.permit(:name, :email, :lifecycle_stage, :job_title, :user_id, :company_id)
+        params.permit(:name, :email, :image_url, :company, :job_title, :user_id)
     end
 
     def update_contact_params 
-        params.permit(:name, :email, :lifecycle_stage, :job_title, :user_id, :company_id)
+        params.permit(:name, :email, :image_url, :company, :job_title, :user_id)
     end
 end

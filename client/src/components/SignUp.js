@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Error from "./Error";
+import "../styles/signup.css";
 
 const SignUp = ({ onLogin }) => {
   const [firstName, setFirstName] = useState("");
@@ -39,8 +40,8 @@ const SignUp = ({ onLogin }) => {
   }
 
   return (
-    <form onSubmit={handleSignup}>
-      <div>
+    <div className="signup">
+      <form onSubmit={handleSignup}>
         <input
           placeholder="Your first name"
           type="text"
@@ -48,8 +49,7 @@ const SignUp = ({ onLogin }) => {
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
         />
-      </div>
-      <div>
+
         <input
           placeholder="Your last name"
           type="text"
@@ -57,8 +57,7 @@ const SignUp = ({ onLogin }) => {
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
         />
-      </div>
-      <div>
+
         <input
           placeholder="create a username"
           type="text"
@@ -66,8 +65,7 @@ const SignUp = ({ onLogin }) => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-      </div>
-      <div>
+
         <input
           placeholder="enter your email"
           type="text"
@@ -75,8 +73,7 @@ const SignUp = ({ onLogin }) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-      </div>
-      <div>
+
         <input
           placeholder="enter your password"
           type="password"
@@ -84,8 +81,7 @@ const SignUp = ({ onLogin }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-      </div>
-      <div>
+
         <input
           placeholder="re-enter your password"
           type="passwordConfirmation"
@@ -93,16 +89,16 @@ const SignUp = ({ onLogin }) => {
           value={password}
           onChange={(e) => setPasswordConfirmation(e.target.value)}
         />
-      </div>
-      <div>
-        <button type="submit">{isLoading ? "Loading..." : "Sign Up"}</button>
-      </div>
-      <div>
+
+        <button id="signup-btn" type="submit">
+          {isLoading ? "Loading..." : "Sign Up"}
+        </button>
+
         {errors.map((error) => (
           <Error key={error}>{error}</Error>
         ))}
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 
