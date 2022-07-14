@@ -9,7 +9,6 @@ const AddDealModal = ({ user, onAddDeal }) => {
 
   const closeModalHandler = () => {
     document.querySelector(".addDealModal").style.display = "none";
-    document.getElementById("lightBoxBg").style.display = "none";
   };
 
   function handleSubmit(e) {

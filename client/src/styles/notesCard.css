@@ -6,3 +6,11 @@
   padding: 20px;
   margin-bottom: 35px;
 }
+
+.notes-card button {
+  background: #ff3636 !important;
+  color: #fff;
+  font-weight: 900;
+  text-transform: uppercase;
+  border-radius: 3px;
+}

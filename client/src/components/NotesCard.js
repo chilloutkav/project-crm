@@ -18,12 +18,11 @@ const NotesCard = ({ note, getDeal }) => {
       method: "DELETE",
     }).then((r) => {
       if (r.ok) {
-        getNote();
+        getDeal();
       } else {
         r.json().then((err) => alert(err.errors));
       }
     });
-    getDeal();
   };
 
   return (

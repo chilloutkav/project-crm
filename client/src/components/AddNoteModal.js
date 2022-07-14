@@ -7,7 +7,6 @@ const AddNoteModal = ({ deal, getDeal }) => {
 
   const closeModalHandler = () => {
     document.querySelector(".addNoteModal").style.display = "none";
-    document.getElementById("lightBoxBg").style.display = "none";
   };
 
   function handleSubmit(e) {

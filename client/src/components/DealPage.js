@@ -17,7 +17,6 @@ const DealPage = () => {
 
   const addNoteModal = () => {
     document.querySelector(".addNoteModal").style.display = "flex";
-    document.getElementById("lightBoxBg").style.display = "flex";
   };
 
   const getDeal = () => {

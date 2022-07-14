@@ -27,7 +27,6 @@ function App() {
 
   const modalHandler = () => {
     document.querySelector(".modalPopover").style.display = "flex";
-    document.getElementById("lightBoxBg").style.display = "flex";
   };
 
   if (!user) return <HomePage onLogin={setUser} />;

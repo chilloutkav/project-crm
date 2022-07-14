@@ -5,7 +5,6 @@ import AddContactForm from "./AddContactForm";
 const ModalPopover = ({ user }) => {
   const closeModalHandler = () => {
     document.querySelector(".modalPopover").style.display = "none";
-    document.getElementById("lightBoxBg").style.display = "none";
   };
 
   return (

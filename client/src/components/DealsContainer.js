@@ -72,7 +72,6 @@ const DealsContainer = ({ user }) => {
 
   const addDealModal = () => {
     document.querySelector(".addDealModal").style.display = "flex";
-    document.getElementById("lightBoxBg").style.display = "flex";
   };
 
   const displayedDeals = deals.filter((deal) => {
@@ -90,7 +89,6 @@ const DealsContainer = ({ user }) => {
   return (
     <>
       <div>
-        <div id="lightBoxBg"></div>
         <h1>Deals Overview</h1>
         <p>Please find your current deals below!</p>
         <div className="deals-overview">

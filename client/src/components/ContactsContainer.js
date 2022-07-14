@@ -28,7 +28,6 @@ const ContactsContainer = ({ user }) => {
 
   const addContactModal = () => {
     document.querySelector(".addContactModal").style.display = "flex";
-    document.getElementById("lightBoxBg").style.display = "flex";
   };
 
   const displayedContacts = contacts.filter((contact) => {
@@ -41,7 +40,6 @@ const ContactsContainer = ({ user }) => {
 
   return (
     <>
-      <div id="lightBoxBg"></div>
       <h1>Your Contacts</h1>
       <p className="contact__contact-count">{contacts.length} Contacts</p>
       <ContactSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />

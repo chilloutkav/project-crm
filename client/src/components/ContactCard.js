@@ -6,7 +6,7 @@ const ContactCard = ({ contact }) => {
   return (
     <div className="contact__contact-card">
       <h4>{contact.name}</h4>
-      {/* <img src={contact.image_url} alt={contact.image_url} /> */}
+      <img src={contact.image_url} alt={contact.image_url} />
       <p>
         {contact.job_title} - {contact.company}
       </p>

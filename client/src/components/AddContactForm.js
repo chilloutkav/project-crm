@@ -10,7 +10,6 @@ const AddContactForm = ({ user, onAddContact }) => {
 
   const closeModalHandler = () => {
     document.querySelector(".addContactModal").style.display = "none";
-    document.getElementById("lightBoxBg").style.display = "none";
   };
 
   function handleSubmit(e) {

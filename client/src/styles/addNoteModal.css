@@ -1,5 +1,6 @@
 .addNoteModal {
   border: 1px solid black;
+  box-shadow: 15px 15px 50px #0008;
   border-radius: 5px;
   max-width: 500px;
   min-height: 500px;
@@ -36,7 +37,7 @@
 .addNoteModal form input,
 .addNoteModal form select {
   width: 100%;
-  padding: 15px 25px;
+  padding: 15px 0px;
 }
 
 #add-note-btn {
