@@ -47,7 +47,9 @@ const DealPage = () => {
 
       <p>{deal.contact.company}</p>
       {<button onClick={editButtonHandler}>Edit Deal</button>}
-      {showEdit ? null : <EditDealForm id={deal.id} getDeal={getDeal} />}
+      {showEdit ? null : (
+        <EditDealForm id={deal.id} getDeal={getDeal} deal={deal} />
+      )}
       <h2>Notes</h2>
       <button onClick={addNoteModal}>Add New Note</button>
       <AddNoteModal deal={deal} getDeal={getDeal} />

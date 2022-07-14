@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/editDealForm.css";
 
-const EditDealForm = ({ id, getDeal }) => {
+const EditDealForm = ({ id, getDeal, deal }) => {
   const [dealStage, setDealStage] = useState("");
   const [dealAmount, setDealAmount] = useState("");
 
@@ -32,7 +32,7 @@ const EditDealForm = ({ id, getDeal }) => {
             defaultValue={"default"}
             onChange={(e) => setDealStage(e.target.value)}
           >
-            <option value="default">Choose Here</option>
+            <option value="default">{deal.deal_stage}</option>
             <option value="Appointment Scheduled">Appointment Scheduled</option>
             <option value="Qualified to Buy">Qualified to Buy</option>
             <option value="Presentation Scheduled">
