@@ -1,11 +1,3 @@
-GIT
-  remote: https://github.com/faker-ruby/faker.git
-  revision: e36fb2bc4a75d8eb1116a6514c356c2bcf951538
-  branch: master
-  specs:
-    faker (2.21.0)
-      i18n (>= 1.8.11, < 2)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -92,6 +84,8 @@ GEM
       reline (>= 0.2.7)
     digest (3.1.0)
     erubi (1.10.0)
+    faker (2.21.0)
+      i18n (>= 1.8.11, < 2)
     globalid (1.0.0)
       activesupport (>= 5.0)
     i18n (1.10.0)
@@ -124,7 +118,7 @@ GEM
       digest
       net-protocol
       timeout
-    nio4r (2.5.8)
+    nio4r (2.7.0)
     nokogiri (1.13.6-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.13.6-x86_64-linux)
@@ -177,6 +171,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  arm64-darwin-24
   x86_64-linux
 
 DEPENDENCIES
@@ -184,7 +179,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   bootsnap
   debug
-  faker!
+  faker
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.0.3)
