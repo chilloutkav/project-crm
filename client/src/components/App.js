@@ -7,6 +7,7 @@ import ContactsContainer from "./ContactsContainer";
 import ContactsPage from "./ContactsPage";
 import DealPage from "./DealPage";
 import DealsContainer from "./DealsContainer";
+import Reports from "./Reports";
 import "../App.css";
 
 function App() {
@@ -62,6 +63,10 @@ function App() {
           element={<ContactsContainer user={user} />}
         />
         <Route path="/dashboard/contacts/:id" element={<ContactsPage />} />
+        <Route
+          path="/dashboard/reports"
+          element={<Reports user={user} />}
+        />
       </Routes>
     </div>
   );

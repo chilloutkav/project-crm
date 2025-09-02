@@ -28,6 +28,42 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script>
+      // Aggressive ResizeObserver error suppression - must be before React loads
+      const originalAddEventListener = window.addEventListener;
+      window.addEventListener = function(type, listener, options) {
+        if (type === 'error') {
+          const wrappedListener = function(event) {
+            if (event.message && event.message.includes('ResizeObserver loop completed with undelivered notifications')) {
+              event.stopImmediatePropagation();
+              event.preventDefault();
+              return;
+            }
+            return listener(event);
+          };
+          return originalAddEventListener.call(this, type, wrappedListener, options);
+        }
+        return originalAddEventListener.call(this, type, listener, options);
+      };
+
+      // Override error handling before React loads
+      window.addEventListener('error', function(e) {
+        if (e.message && e.message.includes('ResizeObserver loop completed with undelivered notifications')) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      // Override console methods
+      const originalError = console.error;
+      console.error = function(...args) {
+        if (args[0] && typeof args[0] === 'string' && args[0].includes('ResizeObserver loop completed with undelivered notifications')) {
+          return;
+        }
+        return originalError.apply(console, args);
+      };
+    </script>
     <div id="root"></div>
     <!--
       This HTML file is a template.
