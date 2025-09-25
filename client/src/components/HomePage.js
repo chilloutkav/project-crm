@@ -1,10 +1,10 @@
 import React from "react";
 import SignUpLoginPage from "./SignUpLoginPage";
 
-const HomePage = ({ onLogin }) => {
+const HomePage = () => {
   return (
     <>
-      <SignUpLoginPage onLogin={onLogin} />
+      <SignUpLoginPage />
     </>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/addContactModal.css";
+import { supabase } from "../supabaseClient";
 
 const AddContactForm = ({ user, onAddContact }) => {
   const [contactName, setContactName] = useState("");
@@ -12,27 +13,29 @@ const AddContactForm = ({ user, onAddContact }) => {
     document.querySelector(".addContactModal").style.display = "none";
   };
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    fetch("/contacts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: contactName,
-        email: contactEmail,
-        lifecycle_stage: contactlifecycle,
-        job_title: contactTitle,
-        company: contactCompany,
-        user_id: user.id,
-      }),
-    }).then((r) => {
-      if (r.ok) {
-        e.target.reset();
-        r.json().then((newContact) => onAddContact(newContact));
-      }
-    });
+
+    const { data, error } = await supabase
+      .from('contacts')
+      .insert([
+        {
+          name: contactName,
+          email: contactEmail,
+          job_title: contactTitle,
+          company: contactCompany,
+          user_id: user.id,
+        }
+      ])
+      .select();
+
+    if (error) {
+      console.error('Error adding contact:', error);
+    } else {
+      e.target.reset();
+      onAddContact(data[0]);
+      closeModalHandler();
+    }
   }
 
   return (

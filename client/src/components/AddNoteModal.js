@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/addNoteModal.css";
+import { supabase } from "../supabaseClient";
 
 const AddNoteModal = ({ deal, getDeal }) => {
   const [noteTitle, setNoteTitle] = useState("");
@@ -9,25 +10,28 @@ const AddNoteModal = ({ deal, getDeal }) => {
     document.querySelector(".addNoteModal").style.display = "none";
   };
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    fetch("/notes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: noteTitle,
-        details: noteDetails,
-        deal_id: deal.id,
-      }),
-    }).then((r) => {
-      if (r.ok) {
-        e.target.reset();
-        r.json();
-      }
-      getDeal();
-    });
+
+    const { data, error } = await supabase
+      .from('notes')
+      .insert([
+        {
+          title: noteTitle,
+          details: noteDetails,
+          deal_id: deal.id,
+        }
+      ])
+      .select();
+
+    if (error) {
+      console.error('Error adding note:', error);
+    } else {
+      e.target.reset();
+      closeModalHandler();
+    }
+
+    getDeal();
   }
 
   return (

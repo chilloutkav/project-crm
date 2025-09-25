@@ -1,36 +1,29 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
-const Login = ({ onLogin }) => {
-  const [username, setUsername] = useState("");
+const Login = () => {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { signIn } = useAuth();
   let navigate = useNavigate();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setIsLoading(true);
     setErrors([]);
-    
-    fetch("/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    }).then((r) => {
-      setIsLoading(false);
-      if (r.ok) {
-        r.json().then((user) => {
-          onLogin(user);
-          navigate("/dashboard");
-        });
-      } else {
-        r.json().then((err) => setErrors(err.errors || ["Login failed. Please try again."]));
-      }
-    });
+
+    const { error } = await signIn(email, password);
+
+    setIsLoading(false);
+    if (error) {
+      setErrors([error.message]);
+    } else {
+      navigate("/dashboard");
+    }
   }
 
   return (
@@ -57,8 +50,8 @@ const Login = ({ onLogin }) => {
               <div>
                 <p className="text-sm font-medium text-blue-800">Demo Account</p>
                 <p className="text-sm text-blue-700 mt-1">
-                  Username: <span className="font-mono font-semibold">demo1</span><br />
-                  Password: <span className="font-mono font-semibold">1234</span>
+                  Email: <span className="font-mono font-semibold">demo1@example.com</span><br />
+                  Password: <span className="font-mono font-semibold">your_password</span>
                 </p>
               </div>
             </div>
@@ -66,24 +59,24 @@ const Login = ({ onLogin }) => {
           
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Username Field */}
+            {/* Email Field */}
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-                Username
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                Email
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a3 3 0 11-6 0 3 3 0 016 0zM8 21a2 2 0 01-2-2V7a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H8z" />
                   </svg>
                 </div>
                 <input
-                  type="text"
-                  id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400"
-                  placeholder="Enter your username"
+                  placeholder="Enter your email"
                   required
                 />
               </div>

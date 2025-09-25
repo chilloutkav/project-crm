@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import NavBar from "./NavBar";
 import HomePage from "./HomePage";
 import DashBoard from "./DashBoard";
@@ -10,48 +10,27 @@ import DealsContainer from "./DealsContainer";
 import Reports from "./Reports";
 import "../App.css";
 
-function App() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    //auto-login
-    fetchUser();
-  }, []);
-
-  function fetchUser() {
-    fetch("/me").then((r) => {
-      if (r.ok) {
-        r.json().then((user) => setUser(user));
-      }
-    });
-  }
+function AppContent() {
+  const { user } = useAuth();
 
   const modalHandler = () => {
     document.querySelector(".modalPopover").style.display = "flex";
   };
 
-  if (!user) return <HomePage onLogin={setUser} />;
+  if (!user) return <HomePage />;
 
   return (
     <div className="App">
-      <NavBar setUser={setUser} />
+      <NavBar />
       <Routes>
         <Route
           exact
           path="/"
-          element={
-            <HomePage user={user} fetchUser={fetchUser} onLogin={setUser} />
-          }
+          element={<HomePage user={user} />}
         />
         <Route
           path="/dashboard"
-          element={
-            <DashBoard
-              user={user}
-              fetchUser={fetchUser}
-              modalHandler={modalHandler}
-            />
-          }
+          element={<DashBoard user={user} modalHandler={modalHandler} />}
         />
         <Route
           path="/dashboard/deals"
@@ -69,6 +48,14 @@ function App() {
         />
       </Routes>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

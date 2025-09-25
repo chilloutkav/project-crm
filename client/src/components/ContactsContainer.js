@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AddContactForm from "./AddContactForm";
 import ContactSearch from "./ContactSearch";
 import ContactsList from "./ContactsList";
+import { supabase } from "../supabaseClient";
 
 const ContactsContainer = ({ user }) => {
   const [contacts, setContacts] = useState([]);
@@ -12,17 +13,21 @@ const ContactsContainer = ({ user }) => {
     setContacts(displayedContacts);
   };
 
-  const getContacts = () => {
-    fetch("/contacts")
-      .then((response) => response.json())
-      .then((response) => {
-        setContacts(
-          response.filter((contact) => {
-            return contact.user.id === user.id;
-          })
-        );
-      })
-      .catch((error) => console.log(error));
+  const getContacts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('contacts')
+        .select('*')
+        .eq('user_id', user.id);
+
+      if (error) {
+        console.error('Error fetching contacts:', error);
+      } else {
+        setContacts(data || []);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const addContactModal = () => {

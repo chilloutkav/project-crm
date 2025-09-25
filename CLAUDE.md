@@ -4,9 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a full-stack CRM application built with Ruby on Rails (API backend) and React (frontend). The Rails API serves JSON data while React handles the UI, with authentication managed through Rails sessions.
+This is a full-stack CRM application **migrated from Ruby on Rails to Supabase**. Originally built with Rails API backend and React frontend, it has been successfully migrated to run entirely on **Supabase (backend/database) + Netlify (frontend deployment)** architecture.
 
-## Technology Stack
+**Migration Status**: 95% Complete (only authentication testing remains)
+
+## Current Technology Stack
+
+- **Backend**: Supabase (PostgreSQL database + Auth + API)
+- **Frontend**: React 18.2.0 with Create React App, Tailwind CSS 3.1.4
+- **Authentication**: Supabase Auth with JWT tokens
+- **Deployment**: Netlify (frontend) + Supabase (backend)
+- **Branch**: `netlify-supabase-migration`
+
+## Legacy Technology Stack (Original)
 
 - **Backend**: Ruby on Rails 7.0.3 (API-only), Ruby 2.7.4, PostgreSQL
 - **Frontend**: React 18.2.0 with Create React App, Tailwind CSS 3.1.4
@@ -15,92 +25,116 @@ This is a full-stack CRM application built with Ruby on Rails (API backend) and 
 
 ## Development Commands
 
-### Backend (Rails)
+### Current (Supabase) Setup
 ```bash
-# Setup and database
+# Frontend development (from /client directory)
+npm install                      # Install dependencies (includes @supabase/supabase-js)
+npm start                        # Start dev server (port 4000, connects to Supabase)
+npm run build                    # Build for production (Netlify deployment)
+npm test                         # Run tests
+
+# Environment setup
+# Create .env.local in /client directory with:
+# REACT_APP_SUPABASE_URL=https://your-project.supabase.co
+# REACT_APP_SUPABASE_ANON_KEY=your_anon_key_here
+```
+
+### Supabase Database Management
+```bash
+# Database managed through Supabase Dashboard:
+# - SQL Editor: Run migrations and queries
+# - Table Editor: Manage schema visually
+# - Authentication: Manage users
+# - API Docs: Auto-generated API documentation
+
+# Key files:
+# - /supabase/schema.sql - Database schema
+# - /supabase/rls_policies.sql - Row Level Security
+# - /client/src/supabaseClient.js - Supabase connection
+# - /client/src/contexts/AuthContext.js - Authentication context
+```
+
+### Legacy (Rails) Commands
+```bash
+# These are NO LONGER NEEDED after migration:
 bundle install                    # Install Ruby dependencies
 rails db:setup                   # Create, migrate, and seed database
-rails db:migrate                 # Run new migrations
-rails db:seed                    # Seed with sample data (demo user: username="demo1", password="1234")
-
-# Development
 rails server                     # Start Rails API server (port 3000)
 rails console                    # Access Rails console
 ```
 
-### Frontend (React)
-```bash
-# From /client directory
-npm install                      # Install dependencies  
-npm start                        # Start dev server (port 4000, proxies to Rails on 3000)
-npm run build                    # Build for production
-npm test                         # Run tests
+## Current Architecture (Post-Migration)
 
-# From root directory (deployment)
-npm run build                    # Build client and deploy to Rails public/
-npm run heroku-postbuild         # Full Heroku deployment build
-```
+### Supabase Database Schema
+- **profiles**: User data (extends auth.users with first_name, last_name, username) - UUID primary keys
+- **contacts**: Customer data (name, image_url, email, job_title, company) - belongs to user
+- **deals**: Sales opportunities (deal_name, deal_stage, deal_type, amount) - belongs to user and contact
+- **notes**: Deal updates (title, details) - belongs to deal
+- **Row Level Security (RLS)**: Automatic data isolation by user
 
-## Architecture
+### API Structure (Supabase Auto-Generated)
+- **REST API**: Auto-generated from database schema
+- **Real-time**: WebSocket connections for live updates
+- **Authentication**: JWT-based with Supabase Auth
+- **Authorization**: Row Level Security policies enforce data access
 
-### Database Schema
-- **Users**: Authentication (first_name, last_name, username, email, password_digest)
-- **Contacts**: Customer data (name, image_url, email, job_title, company) - belongs to user
-- **Deals**: Sales opportunities (deal_name, deal_stage, deal_type, amount) - belongs to user and contact
-- **Notes**: Deal updates (title, details) - belongs to deal
+### Frontend Structure (Updated)
+- React components in `/client/src/components/` - **Updated for Supabase**
+- **AuthContext**: `src/contexts/AuthContext.js` - Supabase auth management
+- **Supabase Client**: `src/supabaseClient.js` - Database connection
+- Tailwind CSS for styling (unchanged)
+- React Router for navigation (unchanged)
 
-### API Structure
-Rails API controllers follow RESTful conventions:
-- `UsersController`, `ContactsController`, `DealsController`, `NotesController`
-- Authentication: `SessionsController` (POST /login, DELETE /logout, GET /me)
-- All controllers use `authorize` before_action for session-based auth
+### Authentication Flow (New)
+1. **Supabase Auth** handles JWT-based authentication
+2. **Row Level Security** automatically protects data access
+3. **React Context** manages authentication state
+4. **JWT tokens** stored client-side, sent with requests
 
-### Frontend Structure
-- React components in `/client/src/components/`
-- Tailwind CSS for styling
-- React Router for navigation
-- Create React App configuration with proxy to Rails backend
+### Legacy Architecture (Original Rails)
+- **Backend**: Rails API controllers (`UsersController`, `ContactsController`, etc.)
+- **Authentication**: Session-based with cookies and `before_action :authorize`
+- **Database**: Rails ActiveRecord with integer primary keys
+- **Deployment**: Heroku with Rails serving React build
 
-### Authentication Flow
-1. Rails handles session-based authentication with cookies
-2. `before_action :authorize` protects all API endpoints
-3. Frontend maintains login state and makes authenticated requests
-4. Session data stored server-side, cookies sent with requests
-
-## Development Workflow
+## Current Development Workflow (Supabase)
 
 ### Making Database Changes
-1. Generate migration: `rails generate migration CreateModelName`
-2. Edit migration file in `db/migrate/`
-3. Run: `rails db:migrate`
-4. Update seed file if needed: `db/seeds.rb`
+1. **Supabase Dashboard**: Use Table Editor or SQL Editor
+2. **Migration files**: Update `supabase/schema.sql` for version control
+3. **RLS Policies**: Update `supabase/rls_policies.sql` as needed
+4. **No migrations needed**: Supabase handles schema changes directly
 
 ### Adding New Features
-1. **Backend**: Create/modify controllers in `app/controllers/`, models in `app/models/`, serializers in `app/serializers/`
-2. **Frontend**: Create React components in `client/src/components/`, update routing as needed
-3. **Styling**: Use Tailwind utility classes, custom styles in `client/src/styles/`
+1. **Database**: Add tables/columns via Supabase Dashboard
+2. **Frontend**: Create React components using Supabase client
+3. **Authentication**: Use `useAuth()` hook from AuthContext
+4. **API Calls**: Use `supabase.from('table').select/insert/update/delete()`
+5. **Styling**: Use Tailwind utility classes (unchanged)
 
-### Deployment Process
-The app auto-deploys to Heroku with:
-1. `npm run heroku-postbuild` builds React app and copies to Rails `public/`
-2. Rails serves the React app at root path via fallback route
-3. Release command runs database migrations
+### Deployment Process (Netlify + Supabase)
+1. **Frontend**: `npm run build` in `/client` directory
+2. **Netlify**: Auto-deploy from git push to branch
+3. **Environment**: Set `REACT_APP_SUPABASE_*` vars in Netlify
+4. **Database**: Supabase handles all backend infrastructure
 
-## Key Patterns
+## Key Patterns (Updated)
 
-### Rails API Controllers
-- All inherit from `ApplicationController` with shared `authorize` method
-- Use Active Model Serializers for consistent JSON responses
-- Follow Rails conventions for parameter handling and error responses
+### Supabase Integration
+- **Client**: `import { supabase } from '../supabaseClient'`
+- **Authentication**: `const { user, signIn, signOut } = useAuth()`
+- **Data Queries**: `const { data, error } = await supabase.from('contacts').select()`
+- **Real-time**: `supabase.from('table').on('INSERT', callback).subscribe()`
 
-### React Components
-- Functional components with hooks
-- State management through component state and props
-- API calls typically made in useEffect hooks
-- Error handling integrated into component logic
+### React Components (Updated)
+- Functional components with hooks (unchanged)
+- **Authentication**: Use `useAuth()` context instead of prop drilling
+- **API calls**: Use Supabase client instead of fetch to Rails
+- **State management**: Component state + Supabase real-time updates
+- **Error handling**: Handle Supabase error objects
 
-### Data Flow
-1. React components make HTTP requests to Rails API endpoints
-2. Rails controllers authenticate via session, query database, return JSON
-3. React updates state and re-renders based on API responses
-4. All database relationships properly serialized in API responses
+### Current Data Flow
+1. **React components** use Supabase client for data operations
+2. **Supabase** handles authentication via JWT tokens
+3. **Row Level Security** automatically filters data by user
+4. **Real-time updates** available via Supabase subscriptions

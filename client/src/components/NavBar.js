@@ -1,20 +1,18 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
-const NavBar = ({ setUser }) => {
+const NavBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { signOut } = useAuth();
 
-  function handleLogout() {
-    fetch("/logout", {
-      method: "DELETE",
-    }).then((r) => {
-      if (r.ok) {
-        setUser(null);
-        navigate("/");
-      }
-    });
+  async function handleLogout() {
+    const { error } = await signOut();
+    if (!error) {
+      navigate("/");
+    }
   }
 
   const isActive = (path) => {

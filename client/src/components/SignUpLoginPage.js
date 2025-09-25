@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import SignUp from "./SignUp";
 import Login from "./Login";
 
-const SignUpLoginPage = ({ onLogin }) => {
+const SignUpLoginPage = () => {
   const [showLogin, setShowLogin] = useState(true);
 
   return (
     <>
       {showLogin ? (
-        <Login onLogin={onLogin} />
+        <Login />
       ) : (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-md w-full">
@@ -23,7 +23,7 @@ const SignUpLoginPage = ({ onLogin }) => {
                 <p className="mt-2 text-gray-600">Join our CRM platform today</p>
               </div>
 
-              <SignUp onLogin={onLogin} />
+              <SignUp />
               
               <div className="text-center">
                 <p className="text-gray-600 mb-4">Already have an account?</p>

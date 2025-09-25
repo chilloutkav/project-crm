@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/addDealModal.css";
+import { supabase } from "../supabaseClient";
 
 const AddDealModal = ({ user, onAddDeal }) => {
   const [dealName, setDealName] = useState("");
@@ -11,26 +12,29 @@ const AddDealModal = ({ user, onAddDeal }) => {
     document.querySelector(".addDealModal").style.display = "none";
   };
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    fetch("/deals", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        deal_name: dealName,
-        deal_stage: dealStage,
-        amount: parseInt(dealAmount),
-        user_id: user.id,
-        contact_id: dealContact,
-      }),
-    }).then((r) => {
-      if (r.ok) {
-        e.target.reset();
-        r.json().then((newDeal) => onAddDeal(newDeal));
-      }
-    });
+
+    const { data, error } = await supabase
+      .from('deals')
+      .insert([
+        {
+          deal_name: dealName,
+          deal_stage: dealStage,
+          amount: parseInt(dealAmount),
+          user_id: user.id,
+          contact_id: dealContact,
+        }
+      ])
+      .select();
+
+    if (error) {
+      console.error('Error adding deal:', error);
+    } else {
+      e.target.reset();
+      onAddDeal(data[0]);
+      closeModalHandler();
+    }
   }
 
   return (

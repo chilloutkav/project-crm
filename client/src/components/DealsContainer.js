@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import DealsList from "./DealsList";
 import DealSearch from "./DealSearch";
 import AddDealModal from "./AddDealModal";
+import { supabase } from "../supabaseClient";
 
 const DealsContainer = ({ user }) => {
   const [deals, setDeals] = useState([]);
@@ -14,25 +15,29 @@ const DealsContainer = ({ user }) => {
     setDeals(displayedDeals);
   };
 
-  const getDeals = () => {
-    fetch("/deals")
-      .then((response) => response.json())
-      .then((response) => {
-        const userDeals = response.filter((deal) => {
-          return deal.user.id === user.id;
-        });
-        
-        // Sort deals by created_at if available, otherwise by ID (newest first)
-        const sortedDeals = userDeals.sort((a, b) => {
-          if (a.created_at && b.created_at) {
-            return new Date(b.created_at) - new Date(a.created_at);
-          }
-          return (b.id || 0) - (a.id || 0);
-        });
-        
-        setDeals(sortedDeals);
-      })
-      .catch((error) => console.log(error));
+  const getDeals = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('deals')
+        .select(`
+          *,
+          contacts (
+            name,
+            email,
+            company
+          )
+        `)
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching deals:', error);
+      } else {
+        setDeals(data || []);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
 

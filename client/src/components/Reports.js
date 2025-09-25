@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { supabase } from "../supabaseClient";
 
 const Reports = ({ user }) => {
   const [deals, setDeals] = useState([]);
@@ -10,19 +11,24 @@ const Reports = ({ user }) => {
     const loadData = async () => {
       try {
         setLoading(true);
-        
-        // Load deals and contacts
+
+        // Load deals and contacts using Supabase
         const [dealsResponse, contactsResponse] = await Promise.all([
-          fetch("/deals").then(r => r.json()),
-          fetch("/contacts").then(r => r.json())
+          supabase.from('deals').select('*').eq('user_id', user.id),
+          supabase.from('contacts').select('*').eq('user_id', user.id)
         ]);
 
-        // Filter user's data
-        const userDeals = dealsResponse.filter(deal => deal.user.id === user.id);
-        const userContacts = contactsResponse.filter(contact => contact.user.id === user.id);
+        if (dealsResponse.error) {
+          console.error("Error loading deals:", dealsResponse.error);
+        } else {
+          setDeals(dealsResponse.data || []);
+        }
 
-        setDeals(userDeals);
-        setContacts(userContacts);
+        if (contactsResponse.error) {
+          console.error("Error loading contacts:", contactsResponse.error);
+        } else {
+          setContacts(contactsResponse.data || []);
+        }
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {

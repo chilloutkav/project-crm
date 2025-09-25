@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import "../styles/signup.css";
 
-const SignUp = ({ onLogin }) => {
+const SignUp = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
@@ -10,32 +12,32 @@ const SignUp = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState([]);
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
 
-  function handleSignup(e) {
+  async function handleSignup(e) {
     e.preventDefault();
     setErrors([]);
     setIsLoading(true);
-    fetch("/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        firstName,
-        lastName,
-        username,
-        password,
-        passwordConfirmation,
-        email,
-      }),
-    }).then((r) => {
+
+    if (password !== passwordConfirmation) {
+      setErrors(["Passwords don't match"]);
       setIsLoading(false);
-      if (r.ok) {
-        r.json().then((user) => onLogin(user));
-      } else {
-        r.json().then((error) => setErrors(error.errors));
-      }
+      return;
+    }
+
+    const { error } = await signUp(email, password, {
+      first_name: firstName,
+      last_name: lastName,
+      username: username
     });
+
+    setIsLoading(false);
+    if (error) {
+      setErrors([error.message]);
+    } else {
+      navigate("/dashboard");
+    }
   }
 
   return (

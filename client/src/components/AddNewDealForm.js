@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { supabase } from "../supabaseClient";
 
 const AddNewDealForm = ({ onAddDeal, user }) => {
   const [dealName, setDealName] = useState("");
@@ -6,26 +7,28 @@ const AddNewDealForm = ({ onAddDeal, user }) => {
   const [dealStage, setDealStage] = useState("");
   const [dealAmount, setDealAmount] = useState("");
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    fetch("/deals", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        deal_name: dealName,
-        deal_stage: dealStage,
-        amount: parseInt(dealAmount),
-        user_id: user.id,
-        contact_id: dealContact,
-      }),
-    }).then((r) => {
-      if (r.ok) {
-        e.target.reset();
-        r.json().then((newDeal) => onAddDeal(newDeal));
-      }
-    });
+
+    const { data, error } = await supabase
+      .from('deals')
+      .insert([
+        {
+          deal_name: dealName,
+          deal_stage: dealStage,
+          amount: parseInt(dealAmount),
+          user_id: user.id,
+          contact_id: dealContact,
+        }
+      ])
+      .select();
+
+    if (error) {
+      console.error('Error adding deal:', error);
+    } else {
+      e.target.reset();
+      onAddDeal(data[0]);
+    }
   }
 
   return (
