@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const DealCard = ({ deal, getDeals }) => {
-  console.log('DealCard received deal:', deal);
   const getStageColor = (stage) => {
     switch (stage?.toLowerCase()) {
       case 'lead':

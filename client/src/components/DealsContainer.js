@@ -35,7 +35,6 @@ const DealsContainer = ({ user }) => {
       if (error) {
         console.error('Error fetching deals:', error);
       } else {
-        console.log('Deals data from Supabase:', data);
         setDeals(data || []);
       }
     } catch (error) {
