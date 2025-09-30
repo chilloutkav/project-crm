@@ -1,0 +1,9 @@
+export { default as UserIcon } from './UserIcon';
+export { default as EmailIcon } from './EmailIcon';
+export { default as BuildingIcon } from './BuildingIcon';
+export { default as EditIcon } from './EditIcon';
+export { default as PlusIcon } from './PlusIcon';
+export { default as CheckIcon } from './CheckIcon';
+export { default as BriefcaseIcon } from './BriefcaseIcon';
+export { default as LockIcon } from './LockIcon';
+export { default as SpinnerIcon } from './SpinnerIcon';
