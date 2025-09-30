@@ -8,11 +8,13 @@ const DealsContainer = ({ user }) => {
   const [deals, setDeals] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStage, setSelectedStage] = useState("all");
+  const [showDealModal, setShowDealModal] = useState(false);
 
   const onAddDeal = (newDeal) => {
     // Add new deal at the beginning (newest first)
     const displayedDeals = [newDeal, ...deals];
     setDeals(displayedDeals);
+    setShowDealModal(false);
   };
 
   const getDeals = async () => {
@@ -33,6 +35,7 @@ const DealsContainer = ({ user }) => {
       if (error) {
         console.error('Error fetching deals:', error);
       } else {
+        console.log('Deals data from Supabase:', data);
         setDeals(data || []);
       }
     } catch (error) {
@@ -72,7 +75,7 @@ const DealsContainer = ({ user }) => {
   };
 
   const addDealModal = () => {
-    document.querySelector(".addDealModal").style.display = "flex";
+    setShowDealModal(true);
   };
 
   const displayedDeals = deals.filter((deal) => {
@@ -215,7 +218,13 @@ const DealsContainer = ({ user }) => {
           <DealsList deals={displayedDeals} getDeals={getDeals} />
         </div>
 
-        <AddDealModal user={user} onAddDeal={onAddDeal} />
+        {showDealModal && (
+          <AddDealModal
+            user={user}
+            onAddDeal={onAddDeal}
+            onClose={() => setShowDealModal(false)}
+          />
+        )}
       </div>
     </div>
   );

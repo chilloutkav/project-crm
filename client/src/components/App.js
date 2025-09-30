@@ -13,9 +13,6 @@ import "../App.css";
 function AppContent() {
   const { user } = useAuth();
 
-  const modalHandler = () => {
-    document.querySelector(".modalPopover").style.display = "flex";
-  };
 
   if (!user) return <HomePage />;
 
@@ -30,7 +27,7 @@ function AppContent() {
         />
         <Route
           path="/dashboard"
-          element={<DashBoard user={user} modalHandler={modalHandler} />}
+          element={<DashBoard user={user} />}
         />
         <Route
           path="/dashboard/deals"

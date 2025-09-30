@@ -1,8 +1,0 @@
-.contact-list-card {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  width: 100%;
-  flex-wrap: wrap;
-  margin-top: 45px;
-}

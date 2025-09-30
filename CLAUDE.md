@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a full-stack CRM application **migrated from Ruby on Rails to Supabase**. Originally built with Rails API backend and React frontend, it has been successfully migrated to run entirely on **Supabase (backend/database) + Netlify (frontend deployment)** architecture.
 
-**Migration Status**: 95% Complete (only authentication testing remains)
+**Migration Status**: 100% Complete ✅
 
 ## Current Technology Stack
 
@@ -82,7 +82,11 @@ rails console                    # Access Rails console
 - React components in `/client/src/components/` - **Updated for Supabase**
 - **AuthContext**: `src/contexts/AuthContext.js` - Supabase auth management
 - **Supabase Client**: `src/supabaseClient.js` - Database connection
-- Tailwind CSS for styling (unchanged)
+- **Edit Modal Components**:
+  - `EditContactModal.js` - Full contact editing with blue theme
+  - `EditNoteModal.js` - Full note editing with purple theme
+  - `EditDealForm.js` - Deal editing with green theme (updated for Supabase)
+- **100% Tailwind CSS** for styling - All legacy CSS removed
 - React Router for navigation (unchanged)
 
 ### Authentication Flow (New)
@@ -138,3 +142,27 @@ rails console                    # Access Rails console
 2. **Supabase** handles authentication via JWT tokens
 3. **Row Level Security** automatically filters data by user
 4. **Real-time updates** available via Supabase subscriptions
+
+## 🎨 Current UI/UX Patterns (100% Tailwind CSS)
+
+### **Design System Themes**
+- **Blue Theme**: Contacts functionality (buttons, modals, focus states)
+- **Green Theme**: Deals functionality (buttons, modals, focus states)
+- **Purple Theme**: Notes functionality (buttons, modals, focus states)
+
+### **Modal Patterns**
+- **Edit Modals**: `EditContactModal.js`, `EditNoteModal.js`
+  - Pre-populated forms with existing data
+  - Modern Tailwind styling with icons and animations
+  - Error handling and loading states
+  - Consistent button layouts (Cancel/Update)
+- **Add Modals**: `AddContactForm.js`, `AddDealModal.js`, `AddNoteModal.js`
+  - Clean form interfaces with validation
+  - Theme-specific styling and icons
+
+### **Component Architecture**
+- **100% Functional Components** with React Hooks
+- **Context-based State Management** (`useAuth()` for authentication)
+- **Supabase Integration** for all CRUD operations
+- **Real-time Data Updates** without page refresh
+- **Mobile-First Responsive Design** with Tailwind breakpoints

@@ -51,7 +51,7 @@ const Login = () => {
                 <p className="text-sm font-medium text-blue-800">Demo Account</p>
                 <p className="text-sm text-blue-700 mt-1">
                   Email: <span className="font-mono font-semibold">demo1@example.com</span><br />
-                  Password: <span className="font-mono font-semibold">your_password</span>
+                  Password: <span className="font-mono font-semibold">1234</span>
                 </p>
               </div>
             </div>

@@ -7,10 +7,12 @@ import { supabase } from "../supabaseClient";
 const ContactsContainer = ({ user }) => {
   const [contacts, setContacts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const onAddContact = (newContact) => {
     const displayedContacts = [...contacts, newContact];
     setContacts(displayedContacts);
+    setShowModal(false);
   };
 
   const getContacts = async () => {
@@ -31,7 +33,7 @@ const ContactsContainer = ({ user }) => {
   };
 
   const addContactModal = () => {
-    document.querySelector(".addContactModal").style.display = "flex";
+    setShowModal(true);
   };
 
   const displayedContacts = contacts.filter((contact) => {
@@ -75,7 +77,13 @@ const ContactsContainer = ({ user }) => {
         </div>
 
         {/* Add Contact Modal */}
-        <AddContactForm onAddContact={onAddContact} user={user} />
+        {showModal && (
+          <AddContactForm
+            onAddContact={onAddContact}
+            user={user}
+            onClose={() => setShowModal(false)}
+          />
+        )}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const DealCard = ({ deal, getDeals }) => {
+  console.log('DealCard received deal:', deal);
   const getStageColor = (stage) => {
     switch (stage?.toLowerCase()) {
       case 'lead':
@@ -85,14 +86,14 @@ const DealCard = ({ deal, getDeals }) => {
             <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H3m2 0h2M9 7h6m-6 4h6m-2 4h2M7 7h4v4H7V7z" />
             </svg>
-            <span className="font-medium text-gray-900">{deal.contact?.company || 'No Company'}</span>
+            <span className="font-medium text-gray-900">{deal.contacts?.company || 'No Company'}</span>
           </div>
 
           <div className="flex items-center space-x-2 text-sm text-gray-600">
             <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            <span>{deal.contact?.name || 'No Contact'}</span>
+            <span>{deal.contacts?.name || 'No Contact'}</span>
           </div>
         </div>
 

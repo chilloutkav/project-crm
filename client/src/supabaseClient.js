@@ -8,3 +8,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+// Make supabase available globally for browser console scripts
+if (typeof window !== 'undefined') {
+  window.supabase = supabase;
+}
