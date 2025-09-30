@@ -7,3 +7,8 @@ export { default as CheckIcon } from './CheckIcon';
 export { default as BriefcaseIcon } from './BriefcaseIcon';
 export { default as LockIcon } from './LockIcon';
 export { default as SpinnerIcon } from './SpinnerIcon';
+export { default as TagIcon } from './TagIcon';
+export { default as DocumentIcon } from './DocumentIcon';
+export { default as ChartIcon } from './ChartIcon';
+export { default as StageIcon } from './StageIcon';
+export { default as DollarIcon } from './DollarIcon';
