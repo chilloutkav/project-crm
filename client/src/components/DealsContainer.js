@@ -98,6 +98,7 @@ const DealsContainer = ({ user }) => {
 
   useEffect(() => {
     getDeals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const StatCard = ({ title, value, count, icon, color }) => (

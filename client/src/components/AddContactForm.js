@@ -4,7 +4,6 @@ import { supabase } from "../supabaseClient";
 const AddContactForm = ({ user, onAddContact, onClose }) => {
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
-  const [contactlifecycle, setContactLifecycle] = useState("");
   const [contactTitle, setContactTitle] = useState("");
   const [contactCompany, setContactCompany] = useState("");
 
@@ -140,31 +139,6 @@ const AddContactForm = ({ user, onAddContact, onClose }) => {
                   placeholder="Enter company name"
                 />
               </div>
-            </div>
-
-            {/* Lifecycle Stage */}
-            <div>
-              <label htmlFor="contactLifecycle" className="block text-sm font-medium text-gray-700 mb-2">
-                Lifecycle Stage
-              </label>
-              <select
-                name="contactLifecycle"
-                id="contactLifecycle"
-                defaultValue={"default"}
-                onChange={(e) => setContactLifecycle(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 bg-white"
-              >
-                <option value="default" disabled>
-                  Choose Stage
-                </option>
-                <option value="Subscriber">Subscriber</option>
-                <option value="Marketing Qualified Lead">Marketing Qualified Lead</option>
-                <option value="Sales Qualified Lead">Sales Qualified Lead</option>
-                <option value="Opportunity">Opportunity</option>
-                <option value="Customer">Customer</option>
-                <option value="Evangelist">Evangelist</option>
-                <option value="Other">Other</option>
-              </select>
             </div>
 
             {/* Buttons */}

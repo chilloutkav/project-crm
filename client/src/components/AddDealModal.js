@@ -31,6 +31,7 @@ const AddDealModal = ({ user, onAddDeal, onClose }) => {
 
   useEffect(() => {
     getContacts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.id]);
 
   async function handleSubmit(e) {

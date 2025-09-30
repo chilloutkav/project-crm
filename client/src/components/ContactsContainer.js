@@ -42,6 +42,7 @@ const ContactsContainer = ({ user }) => {
 
   useEffect(() => {
     getContacts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
