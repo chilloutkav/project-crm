@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { supabase } from "../supabaseClient";
 import EditNoteModal from "./EditNoteModal";
+import { formatDate } from "../utils/formatters";
 
 const NotesCard = ({ note, getDeal }) => {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -31,17 +32,6 @@ const NotesCard = ({ note, getDeal }) => {
     } finally {
       setIsDeleting(false);
     }
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
   };
 
   const handleEditNote = (updatedNote) => {

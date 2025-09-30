@@ -3,6 +3,7 @@ import DealsList from "./DealsList";
 import DealSearch from "./DealSearch";
 import AddDealModal from "./AddDealModal";
 import { supabase } from "../supabaseClient";
+import { formatCurrency } from "../utils/formatters";
 
 const DealsContainer = ({ user }) => {
   const [deals, setDeals] = useState([]);
@@ -63,15 +64,6 @@ const DealsContainer = ({ user }) => {
       closedDealsCount: closedDeals.length
     };
   }, [deals]);
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-  };
 
   const addDealModal = () => {
     setShowDealModal(true);

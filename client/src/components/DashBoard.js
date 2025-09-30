@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import DealsContainer from "./DealsContainer";
+import { formatCurrency } from "../utils/formatters";
 
 const DashBoard = ({ user }) => {
   const [stats, setStats] = useState({
@@ -28,15 +29,6 @@ const DashBoard = ({ user }) => {
       });
     }
   }, [user]);
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-  };
 
   const StatCard = ({ title, value, icon, color, description, link }) => (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-300">

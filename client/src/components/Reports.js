@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
+import { formatCurrency } from "../utils/formatters";
 
 const Reports = ({ user }) => {
   const [deals, setDeals] = useState([]);
@@ -80,15 +81,6 @@ const Reports = ({ user }) => {
       winRate
     };
   }, [deals, contacts]);
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-  };
 
   const MetricCard = ({ title, value, icon, color, subtitle }) => (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">

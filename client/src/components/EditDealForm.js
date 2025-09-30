@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { supabase } from "../supabaseClient";
 import { FormInput, FormSelect, Button } from "./common";
 import { EditIcon, StageIcon, DollarIcon, CheckIcon } from "./icons";
+import { DEAL_STAGES } from "../utils/dealHelpers";
 
 const EditDealForm = ({ id, getDeal, deal }) => {
   const [dealStage, setDealStage] = useState("");
@@ -33,15 +34,6 @@ const EditDealForm = ({ id, getDeal, deal }) => {
     }
   }
 
-  const stageOptions = [
-    { value: "Lead", label: "Lead" },
-    { value: "Qualified", label: "Qualified" },
-    { value: "Proposal", label: "Proposal" },
-    { value: "Negotiation", label: "Negotiation" },
-    { value: "Closed", label: "Closed" },
-    { value: "Lost", label: "Lost" }
-  ];
-
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 space-y-6">
       {/* Header */}
@@ -60,7 +52,7 @@ const EditDealForm = ({ id, getDeal, deal }) => {
           label="Deal Stage"
           value={dealStage || deal.deal_stage}
           onChange={(e) => setDealStage(e.target.value)}
-          options={stageOptions}
+          options={DEAL_STAGES}
           icon={StageIcon}
           themeColor="green"
         />

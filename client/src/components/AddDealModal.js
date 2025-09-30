@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { FormInput, FormSelect, Button, Modal } from "./common";
 import { ChartIcon, UserIcon, StageIcon, DollarIcon, PlusIcon } from "./icons";
+import { DEAL_STAGES } from "../utils/dealHelpers";
 
 const AddDealModal = ({ user, onAddDeal, onClose }) => {
   const [dealName, setDealName] = useState("");
@@ -57,15 +58,6 @@ const AddDealModal = ({ user, onAddDeal, onClose }) => {
     }
   }
 
-  const stageOptions = [
-    { value: "Lead", label: "Lead" },
-    { value: "Qualified", label: "Qualified" },
-    { value: "Proposal", label: "Proposal" },
-    { value: "Negotiation", label: "Negotiation" },
-    { value: "Closed", label: "Closed" },
-    { value: "Lost", label: "Lost" }
-  ];
-
   const contactOptions = contacts.map(contact => ({
     value: contact.id,
     label: contact.name
@@ -109,7 +101,7 @@ const AddDealModal = ({ user, onAddDeal, onClose }) => {
           label="Deal Stage"
           value={dealStage}
           onChange={(e) => setDealStage(e.target.value)}
-          options={stageOptions}
+          options={DEAL_STAGES}
           icon={StageIcon}
           themeColor="green"
           defaultOption="Choose Stage"

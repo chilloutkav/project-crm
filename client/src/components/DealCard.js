@@ -1,58 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { DollarIcon, BuildingIcon, UserIcon } from "./icons";
+import { formatCurrency } from "../utils/formatters";
+import { getStageColor, getStageIcon } from "../utils/dealHelpers";
 
 const DealCard = ({ deal, getDeals }) => {
-  const getStageColor = (stage) => {
-    switch (stage?.toLowerCase()) {
-      case 'lead':
-        return 'bg-gray-100 text-gray-800';
-      case 'qualified':
-        return 'bg-blue-100 text-blue-800';
-      case 'proposal':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'negotiation':
-        return 'bg-orange-100 text-orange-800';
-      case 'closed':
-        return 'bg-green-100 text-green-800';
-      case 'lost':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getStageIcon = (stage) => {
-    switch (stage?.toLowerCase()) {
-      case 'lead':
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        );
-      case 'qualified':
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-          </svg>
-        );
-      default:
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
-          </svg>
-        );
-    }
-  };
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 p-6 group">
