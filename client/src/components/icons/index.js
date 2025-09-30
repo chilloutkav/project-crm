@@ -12,3 +12,7 @@ export { default as DocumentIcon } from './DocumentIcon';
 export { default as ChartIcon } from './ChartIcon';
 export { default as StageIcon } from './StageIcon';
 export { default as DollarIcon } from './DollarIcon';
+export { default as SearchIcon } from './SearchIcon';
+export { default as CloseIcon } from './CloseIcon';
+export { default as UsersIcon } from './UsersIcon';
+export { default as ChartBarIcon } from './ChartBarIcon';
