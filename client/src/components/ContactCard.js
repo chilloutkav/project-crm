@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { EmailIcon } from "./icons";
 
 const ContactCard = ({ contact }) => {
   return (
@@ -7,8 +8,8 @@ const ContactCard = ({ contact }) => {
       <div className="flex flex-col items-center space-y-4">
         {/* Profile Image */}
         <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-100 ring-4 ring-gray-50 group-hover:ring-blue-50 transition-all duration-300">
-          <img 
-            src={contact.image_url} 
+          <img
+            src={contact.image_url}
             alt={contact.name}
             className="w-full h-full object-cover"
             onError={(e) => {
@@ -20,7 +21,7 @@ const ContactCard = ({ contact }) => {
             {contact.name?.charAt(0)?.toUpperCase() || '?'}
           </div>
         </div>
-        
+
         {/* Contact Info */}
         <div className="text-center space-y-2 flex-1">
           <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
@@ -33,22 +34,20 @@ const ContactCard = ({ contact }) => {
             {contact.company}
           </p>
         </div>
-        
+
         {/* Email */}
         <div className="w-full pt-4 border-t border-gray-100">
-          <a 
-            href={`mailto:${contact.email}`} 
+          <a
+            href={`mailto:${contact.email}`}
             className="text-sm text-gray-500 hover:text-blue-600 transition-colors duration-200 flex items-center justify-center space-x-2 p-2 hover:bg-gray-50 rounded-md"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
+            <EmailIcon className="w-4 h-4" />
             <span className="truncate">{contact.email}</span>
           </a>
         </div>
-        
+
         {/* Action Button */}
-        <Link 
+        <Link
           to={`/dashboard/contacts/${contact.id}`}
           className="w-full"
         >
