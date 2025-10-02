@@ -277,3 +277,75 @@ Add comprehensive company management alongside existing contact management. This
 - Company-level reporting and insights
 - Improved contact context and relationship mapping
 - Enhanced deal tracking at organizational level
+
+## 🔒 Security
+
+### **Environment Variables & Secrets Management**
+
+**IMPORTANT:** Never commit sensitive environment variables to version control.
+
+**Setup:**
+1. Copy `.env.local.example` to `.env.local`
+2. Replace placeholder values with your actual Supabase credentials
+3. `.env.local` is in `.gitignore` and excluded from version control
+
+**Supabase Credentials:**
+- Get from: Supabase Dashboard → Settings → API
+- `REACT_APP_SUPABASE_URL`: Your project URL
+- `REACT_APP_SUPABASE_ANON_KEY`: Anonymous/public key (safe for client-side)
+
+### **Security Headers**
+
+The app includes comprehensive security headers via `client/public/_headers` (Netlify):
+
+- **Content-Security-Policy (CSP)**: XSS and injection attack protection
+- **X-Frame-Options**: Clickjacking protection (DENY)
+- **Strict-Transport-Security (HSTS)**: Force HTTPS for 1 year
+- **X-Content-Type-Options**: MIME type sniffing protection
+- **Referrer-Policy**: Limit referrer information leakage
+- **Permissions-Policy**: Restrict browser features
+
+### **Row Level Security (RLS)**
+
+Database security enforced at Supabase level:
+- All tables have RLS enabled
+- Users can only access their own data
+- Policies automatically filter by `auth.uid()`
+- No additional authorization code needed in frontend
+
+### **Security Best Practices**
+
+✅ **Implemented:**
+- Environment variables never committed to git
+- Supabase client NOT exposed on window object
+- Row Level Security on all database tables
+- Security headers for XSS, clickjacking, HSTS protection
+- HTTPS enforced (Supabase + Netlify)
+- JWT-based authentication
+
+⚠️ **To Implement (Production):**
+- Remove/environment-gate demo credentials in Login.js
+- Add password strength requirements in SignUp.js
+- Implement rate limiting (Supabase dashboard settings)
+- Add input validation/sanitization library
+- Remove console.error statements in production builds
+- Set up Supabase auth email verification
+- Configure Supabase password policies
+
+### **Credential Rotation**
+
+If credentials are ever exposed:
+1. Go to Supabase Dashboard → Settings → API
+2. Click "Reset" on anon/public key
+3. Update `.env.local` with new key
+4. Update Netlify environment variables
+5. Redeploy application
+
+### **Security Incident History**
+
+**October 2025 - Phase 1 Security Hardening:**
+- ✅ Removed `.env.local` from git history (all branches)
+- ✅ Removed `window.supabase` global exposure
+- ✅ Added comprehensive security headers
+- ✅ Created `.env.local.example` template
+- ⚠️ **ACTION REQUIRED:** Rotate Supabase keys if compromised
