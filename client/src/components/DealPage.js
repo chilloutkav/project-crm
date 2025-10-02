@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import AddDealModal from "./AddDealModal";
 import AddNoteModal from "./AddNoteModal";
 import EditDealForm from "./EditDealForm";
 import NotesCard from "./NotesCard";
