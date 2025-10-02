@@ -166,3 +166,55 @@ rails console                    # Access Rails console
 - **Supabase Integration** for all CRUD operations
 - **Real-time Data Updates** without page refresh
 - **Mobile-First Responsive Design** with Tailwind breakpoints
+
+## 🎯 Claude Code Agent Usage
+
+### **When to Use the UI/UX Designer Agent**
+
+**ALWAYS use the `ui-ux-designer` agent proactively for:**
+
+1. **New UI Component Development**
+   - Creating new modals, forms, dashboards, or any visual component
+   - Before writing React component code, consult the agent for design specs
+   - Example: "I need to build a new analytics dashboard" → Use agent first
+
+2. **UI/UX Improvements & Refactoring**
+   - Improving existing user flows or interfaces
+   - Addressing user experience issues or conversion problems
+   - Modernizing outdated UI patterns
+   - Example: "The contact form has low conversion" → Use agent to analyze
+
+3. **Design System Work**
+   - Establishing or extending design tokens (colors, typography, spacing)
+   - Creating reusable component patterns
+   - Ensuring visual consistency across the application
+   - Example: "Need to standardize button styles" → Use agent
+
+4. **Accessibility Audits**
+   - WCAG compliance checks for existing or new features
+   - Keyboard navigation and screen reader optimization
+   - Color contrast and touch target verification
+   - Example: "Is this modal accessible?" → Use agent to audit
+
+5. **Responsive Design Challenges**
+   - Mobile-first vs desktop-first strategy decisions
+   - Complex layout breakpoint planning
+   - Touch vs mouse interaction patterns
+   - Example: "Need mobile version of data table" → Use agent
+
+**Agent Workflow:**
+```bash
+# Step 1: Engage agent for design
+→ Use ui-ux-designer agent to create specifications
+
+# Step 2: Implement based on agent's output
+→ Build React components following the design specs
+
+# Step 3: Review & iterate
+→ If needed, re-engage agent for refinements
+```
+
+**Integration with Existing Design System:**
+- Agent is aware of the CRM's Blue/Green/Purple theme system
+- Agent will provide Tailwind CSS specifications matching existing patterns
+- Agent ensures new components fit within the established design language
