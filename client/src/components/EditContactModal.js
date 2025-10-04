@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { FormInput, Button, Modal } from "./common";
 import { UserIcon, EmailIcon, BriefcaseIcon, BuildingIcon, EditIcon, CheckIcon } from "./icons";
+import { validateData, contactSchema } from "../utils/validation";
+import { handleSupabaseError } from "../utils/errorHandler";
+import { useToast } from "../contexts/ToastContext";
+import logger from "../utils/logger";
 
 const EditContactModal = ({ contact, onEditContact, onClose }) => {
   const [contactName, setContactName] = useState("");
@@ -9,7 +13,8 @@ const EditContactModal = ({ contact, onEditContact, onClose }) => {
   const [contactTitle, setContactTitle] = useState("");
   const [contactCompany, setContactCompany] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState([]);
+  const [validationErrors, setValidationErrors] = useState({});
+  const toast = useToast();
 
   // Pre-populate form with existing contact data
   useEffect(() => {
@@ -21,9 +26,27 @@ const EditContactModal = ({ contact, onEditContact, onClose }) => {
     }
   }, [contact]);
 
+  const validateForm = () => {
+    const { success, errors } = validateData(contactSchema, {
+      name: contactName,
+      email: contactEmail,
+      job_title: contactTitle,
+      company: contactCompany
+    });
+
+    setValidationErrors(errors);
+    return success;
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
-    setErrors([]);
+
+    // Validate form before submission
+    if (!validateForm()) {
+      toast.error('Please fix the errors before submitting');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -39,15 +62,17 @@ const EditContactModal = ({ contact, onEditContact, onClose }) => {
         .select();
 
       if (error) {
-        console.error('Error updating contact:', error);
-        setErrors([error.message]);
+        const friendlyMessage = handleSupabaseError(error);
+        toast.error(friendlyMessage);
+        logger.error('Error updating contact:', error);
       } else {
+        toast.success('Contact updated successfully!');
         onEditContact(data[0]);
         onClose();
       }
     } catch (error) {
-      console.error('Error:', error);
-      setErrors(['An unexpected error occurred. Please try again.']);
+      toast.error('An unexpected error occurred. Please try again.');
+      logger.error('Error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -63,64 +88,68 @@ const EditContactModal = ({ contact, onEditContact, onClose }) => {
       iconBgColor="bg-blue-600"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        <FormInput
-          id="contactName"
-          label="Full Name"
-          value={contactName}
-          onChange={(e) => setContactName(e.target.value)}
-          placeholder="Enter contact's full name"
-          icon={UserIcon}
-          themeColor="blue"
-          required
-        />
+        <div>
+          <FormInput
+            id="contactName"
+            label="Full Name"
+            value={contactName}
+            onChange={(e) => setContactName(e.target.value)}
+            placeholder="Enter contact's full name"
+            icon={UserIcon}
+            themeColor="blue"
+            required
+          />
+          {validationErrors.name && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors.name}</p>
+          )}
+        </div>
 
-        <FormInput
-          id="contactEmail"
-          label="Email Address"
-          type="email"
-          value={contactEmail}
-          onChange={(e) => setContactEmail(e.target.value)}
-          placeholder="Enter email address"
-          icon={EmailIcon}
-          themeColor="blue"
-          required
-        />
+        <div>
+          <FormInput
+            id="contactEmail"
+            label="Email Address"
+            type="email"
+            value={contactEmail}
+            onChange={(e) => setContactEmail(e.target.value)}
+            placeholder="Enter email address"
+            icon={EmailIcon}
+            themeColor="blue"
+            required
+          />
+          {validationErrors.email && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors.email}</p>
+          )}
+        </div>
 
-        <FormInput
-          id="contactTitle"
-          label="Job Title"
-          value={contactTitle}
-          onChange={(e) => setContactTitle(e.target.value)}
-          placeholder="Enter job title"
-          icon={BriefcaseIcon}
-          themeColor="blue"
-        />
+        <div>
+          <FormInput
+            id="contactTitle"
+            label="Job Title"
+            value={contactTitle}
+            onChange={(e) => setContactTitle(e.target.value)}
+            placeholder="Enter job title"
+            icon={BriefcaseIcon}
+            themeColor="blue"
+          />
+          {validationErrors.job_title && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors.job_title}</p>
+          )}
+        </div>
 
-        <FormInput
-          id="contactCompany"
-          label="Company"
-          value={contactCompany}
-          onChange={(e) => setContactCompany(e.target.value)}
-          placeholder="Enter company name"
-          icon={BuildingIcon}
-          themeColor="blue"
-        />
-
-        {/* Error Messages */}
-        {errors.length > 0 && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <div className="flex">
-              <svg className="w-5 h-5 text-red-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div>
-                {errors.map((error, index) => (
-                  <p key={index} className="text-sm text-red-800">{error}</p>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+        <div>
+          <FormInput
+            id="contactCompany"
+            label="Company"
+            value={contactCompany}
+            onChange={(e) => setContactCompany(e.target.value)}
+            placeholder="Enter company name"
+            icon={BuildingIcon}
+            themeColor="blue"
+          />
+          {validationErrors.company && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors.company}</p>
+          )}
+        </div>
 
         {/* Buttons */}
         <div className="flex space-x-3 pt-4">

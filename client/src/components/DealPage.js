@@ -4,6 +4,7 @@ import AddNoteModal from "./AddNoteModal";
 import EditDealForm from "./EditDealForm";
 import NotesCard from "./NotesCard";
 import { supabase } from "../supabaseClient";
+import logger from "../utils/logger";
 
 const DealPage = () => {
   const [deal, setDeal] = useState({ notes: [], contact: [], amount: "" });
@@ -32,12 +33,12 @@ const DealPage = () => {
         .single();
 
       if (error) {
-        console.error('Error fetching deal:', error);
+        logger.error('Error fetching deal:', error);
       } else {
         setDeal(data || { notes: [], contact: {}, amount: "" });
       }
     } catch (error) {
-      console.error('Error:', error);
+      logger.error('Error:', error);
     }
   };
 

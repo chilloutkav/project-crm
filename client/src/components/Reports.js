@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { formatCurrency } from "../utils/formatters";
+import logger from "../utils/logger";
 
 const Reports = ({ user }) => {
   const [deals, setDeals] = useState([]);
@@ -20,18 +21,18 @@ const Reports = ({ user }) => {
         ]);
 
         if (dealsResponse.error) {
-          console.error("Error loading deals:", dealsResponse.error);
+          logger.error("Error loading deals:", dealsResponse.error);
         } else {
           setDeals(dealsResponse.data || []);
         }
 
         if (contactsResponse.error) {
-          console.error("Error loading contacts:", contactsResponse.error);
+          logger.error("Error loading contacts:", contactsResponse.error);
         } else {
           setContacts(contactsResponse.data || []);
         }
       } catch (error) {
-        console.error("Error loading data:", error);
+        logger.error("Error loading data:", error);
       } finally {
         setLoading(false);
       }

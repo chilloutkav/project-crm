@@ -3,6 +3,7 @@ import AddContactForm from "./AddContactForm";
 import ContactSearch from "./ContactSearch";
 import ContactsList from "./ContactsList";
 import { supabase } from "../supabaseClient";
+import logger from "../utils/logger";
 
 const ContactsContainer = ({ user }) => {
   const [contacts, setContacts] = useState([]);
@@ -23,12 +24,12 @@ const ContactsContainer = ({ user }) => {
         .eq('user_id', user.id);
 
       if (error) {
-        console.error('Error fetching contacts:', error);
+        logger.error('Error fetching contacts:', error);
       } else {
         setContacts(data || []);
       }
     } catch (error) {
-      console.error('Error:', error);
+      logger.error('Error:', error);
     }
   };
 

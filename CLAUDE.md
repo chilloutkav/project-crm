@@ -111,10 +111,14 @@ rails console                    # Access Rails console
 
 ### Adding New Features
 1. **Database**: Add tables/columns via Supabase Dashboard
-2. **Frontend**: Create React components using Supabase client
-3. **Authentication**: Use `useAuth()` hook from AuthContext
-4. **API Calls**: Use `supabase.from('table').select/insert/update/delete()`
-5. **Styling**: Use Tailwind utility classes (unchanged)
+2. **Validation Schema**: Create Zod schema in `utils/validation.js` for new data model
+3. **Frontend**: Create React components using Supabase client
+4. **Authentication**: Use `useAuth()` hook from AuthContext
+5. **Form Validation**: Integrate `validateData()` with the new schema
+6. **Error Handling**: Use `handleSupabaseError()` for user-friendly messages
+7. **User Feedback**: Add toast notifications for success/error states
+8. **API Calls**: Use `supabase.from('table').select/insert/update/delete()`
+9. **Styling**: Use Tailwind utility classes (unchanged)
 
 ### Deployment Process (Netlify + Supabase)
 1. **Frontend**: `npm run build` in `/client` directory
@@ -135,13 +139,216 @@ rails console                    # Access Rails console
 - **Authentication**: Use `useAuth()` context instead of prop drilling
 - **API calls**: Use Supabase client instead of fetch to Rails
 - **State management**: Component state + Supabase real-time updates
-- **Error handling**: Handle Supabase error objects
+- **Validation**: Zod schemas with `validateData()` for all forms (Oct 2025)
+- **Error handling**: User-friendly messages via `handleSupabaseError()`
+- **User feedback**: Toast notifications via `useToast()` hook
+- **Loading states**: `isSubmitting` state with disabled buttons during operations
 
-### Current Data Flow
-1. **React components** use Supabase client for data operations
-2. **Supabase** handles authentication via JWT tokens
-3. **Row Level Security** automatically filters data by user
-4. **Real-time updates** available via Supabase subscriptions
+### Current Data Flow (with Validation)
+1. **User submits form** → Client-side validation with Zod schemas
+2. **Validation passes** → React component calls Supabase client
+3. **Supabase** authenticates via JWT and enforces Row Level Security
+4. **Response handling**:
+   - Success → Toast notification + UI update
+   - Error → Friendly error message + toast notification
+5. **Logger** records errors in development mode only
+
+## 🛠️ Development Utilities (Phase 2 Security - Oct 2025)
+
+### Logging (`utils/logger.js`)
+Environment-aware logging that only outputs in development mode:
+```javascript
+import logger from '../utils/logger';
+
+// Usage (replaces console statements)
+logger.log('User logged in');           // General logging
+logger.error('Failed to load data');    // Errors
+logger.warn('Deprecated feature used'); // Warnings
+```
+
+### Validation (`utils/validation.js`)
+Zod-based validation schemas for all forms:
+```javascript
+import { contactSchema, dealSchema, noteSchema, validateData } from '../utils/validation';
+
+// Validate form data
+const { success, errors } = validateData(contactSchema, formData);
+if (!success) {
+  // Handle validation errors
+  console.log(errors); // { name: "Name is required", email: "Invalid email" }
+}
+
+// Password strength validation
+import { validatePasswordStrength } from '../utils/validation';
+const { checks, strength, isValid } = validatePasswordStrength(password);
+// strength: 'weak' | 'medium' | 'strong'
+// checks: { length, uppercase, lowercase, number, special }
+```
+
+**Available Schemas:**
+- `contactSchema` - Contact form validation
+- `dealSchema` - Deal form validation
+- `noteSchema` - Note form validation
+- `signupSchema` - User signup validation
+
+### Error Handling (`utils/errorHandler.js`)
+User-friendly error messages for Supabase errors:
+```javascript
+import { handleSupabaseError, formatError } from '../utils/errorHandler';
+
+const { error } = await supabase.from('contacts').insert(data);
+if (error) {
+  const friendlyMessage = handleSupabaseError(error);
+  // Returns: "This record already exists" instead of "duplicate key constraint..."
+}
+```
+
+### Toast Notifications (`contexts/ToastContext.js`)
+Global toast notification system:
+```javascript
+import { useToast } from '../contexts/ToastContext';
+
+function MyComponent() {
+  const toast = useToast();
+
+  const handleSuccess = () => {
+    toast.success('Contact added successfully!');
+  };
+
+  const handleError = () => {
+    toast.error('Failed to save contact. Please try again.');
+  };
+
+  // Also available: toast.warning(), toast.info(), toast.showToast()
+}
+```
+
+**Toast Features:**
+- 4 variants: success (green), error (red), warning (yellow), info (blue)
+- Auto-dismiss after 5 seconds (configurable)
+- Manual dismiss with close button
+- Positioned top-right corner
+- Slide-in animation
+
+### Form Validation & Error Handling Pattern
+**Comprehensive validation pattern** implemented across all 9 forms/modals (Oct 2025):
+
+#### Standard Implementation Pattern
+```javascript
+import React, { useState } from "react";
+import { supabase } from "../supabaseClient";
+import { validateData, contactSchema } from "../utils/validation";
+import { handleSupabaseError } from "../utils/errorHandler";
+import { useToast } from "../contexts/ToastContext";
+import logger from "../utils/logger";
+
+const MyForm = ({ user, onSuccess, onClose }) => {
+  // Form field state
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    // ... other fields
+  });
+
+  // Validation and UI state
+  const [validationErrors, setValidationErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const toast = useToast();
+
+  // Validation function
+  const validateForm = () => {
+    const { success, errors } = validateData(contactSchema, {
+      name: formData.name,
+      email: formData.email,
+      // ... other fields
+    });
+
+    setValidationErrors(errors);
+    return success;
+  };
+
+  // Submit handler with full error handling
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    // 1. Validate form
+    if (!validateForm()) {
+      toast.error('Please fix the errors before submitting');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // 2. Submit to Supabase
+    const { data, error } = await supabase
+      .from('contacts')
+      .insert([{ ...formData, user_id: user.id }])
+      .select();
+
+    setIsSubmitting(false);
+
+    // 3. Handle response
+    if (error) {
+      const friendlyMessage = handleSupabaseError(error);
+      toast.error(friendlyMessage);
+      logger.error('Error adding contact:', error);
+    } else {
+      toast.success('Contact added successfully!');
+      e.target.reset();
+      onSuccess(data[0]);
+      onClose();
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Form field with inline error */}
+      <div>
+        <input
+          type="text"
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          required
+        />
+        {validationErrors.name && (
+          <p className="mt-1 text-sm text-red-600">{validationErrors.name}</p>
+        )}
+      </div>
+
+      {/* Submit button with loading state */}
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Saving...' : 'Save'}
+      </button>
+    </form>
+  );
+};
+```
+
+#### Validation Schemas Available
+- **contactSchema**: name (2-100 chars, letters/spaces/hyphens/apostrophes), email (valid format, max 254), job_title (optional, 2-100 chars), company (optional, 2-200 chars)
+- **dealSchema**: deal_name (2-200 chars), deal_stage (enum), deal_type (optional enum), amount (positive number, max 999,999,999)
+- **noteSchema**: title (2-200 chars), details (10-5000 chars)
+- **signupSchema**: first_name (2-50 chars), last_name (2-50 chars), username (3-30 chars, alphanumeric + underscore), email, password (8-128 chars)
+
+#### Benefits of This Pattern
+✅ **Client-side validation** prevents invalid submissions and reduces server load
+✅ **User-friendly error messages** via handleSupabaseError() instead of raw database errors
+✅ **Real-time feedback** with toast notifications for all operations
+✅ **Inline field-level errors** guide users to fix specific issues
+✅ **Loading states** prevent double submissions and provide visual feedback
+✅ **Consistent UX** across all 9 forms in the application
+✅ **Type-safe validation** with Zod schemas
+
+#### Forms Using This Pattern (9 total)
+1. AddContactForm.js
+2. EditContactModal.js
+3. AddNoteModal.js
+4. EditNoteModal.js
+5. AddDealModal.js
+6. AddNewDealForm.js
+7. EditDealForm.js
+8. Login.js (error handling + toasts)
+9. SignUp.js (validation + password strength)
 
 ## 🎨 Current UI/UX Patterns (100% Tailwind CSS)
 

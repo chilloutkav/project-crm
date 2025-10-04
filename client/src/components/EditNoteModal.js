@@ -2,12 +2,17 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { FormInput, FormTextArea, Button, Modal } from "./common";
 import { EditIcon, CheckIcon, TagIcon, DocumentIcon } from "./icons";
+import { validateData, noteSchema } from "../utils/validation";
+import { handleSupabaseError } from "../utils/errorHandler";
+import { useToast } from "../contexts/ToastContext";
+import logger from "../utils/logger";
 
 const EditNoteModal = ({ note, onEditNote, onClose }) => {
   const [noteTitle, setNoteTitle] = useState("");
   const [noteDetails, setNoteDetails] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState([]);
+  const [validationErrors, setValidationErrors] = useState({});
+  const toast = useToast();
 
   // Pre-populate form with existing note data
   useEffect(() => {
@@ -17,9 +22,25 @@ const EditNoteModal = ({ note, onEditNote, onClose }) => {
     }
   }, [note]);
 
+  const validateForm = () => {
+    const { success, errors } = validateData(noteSchema, {
+      title: noteTitle,
+      details: noteDetails
+    });
+
+    setValidationErrors(errors);
+    return success;
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
-    setErrors([]);
+
+    // Validate form before submission
+    if (!validateForm()) {
+      toast.error('Please fix the errors before submitting');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -33,15 +54,17 @@ const EditNoteModal = ({ note, onEditNote, onClose }) => {
         .select();
 
       if (error) {
-        console.error('Error updating note:', error);
-        setErrors([error.message]);
+        const friendlyMessage = handleSupabaseError(error);
+        toast.error(friendlyMessage);
+        logger.error('Error updating note:', error);
       } else {
+        toast.success('Note updated successfully!');
         onEditNote(data[0]);
         onClose();
       }
     } catch (error) {
-      console.error('Error:', error);
-      setErrors(['An unexpected error occurred. Please try again.']);
+      toast.error('An unexpected error occurred. Please try again.');
+      logger.error('Error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -58,44 +81,38 @@ const EditNoteModal = ({ note, onEditNote, onClose }) => {
       maxWidth="max-w-lg"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        <FormInput
-          id="noteTitle"
-          label="Note Title"
-          value={noteTitle}
-          onChange={(e) => setNoteTitle(e.target.value)}
-          placeholder="Enter note title"
-          icon={TagIcon}
-          themeColor="purple"
-          required
-        />
+        <div>
+          <FormInput
+            id="noteTitle"
+            label="Note Title"
+            value={noteTitle}
+            onChange={(e) => setNoteTitle(e.target.value)}
+            placeholder="Enter note title"
+            icon={TagIcon}
+            themeColor="purple"
+            required
+          />
+          {validationErrors.title && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors.title}</p>
+          )}
+        </div>
 
-        <FormTextArea
-          id="noteDetails"
-          label="Note Details"
-          value={noteDetails}
-          onChange={(e) => setNoteDetails(e.target.value)}
-          placeholder="Enter note details..."
-          icon={DocumentIcon}
-          themeColor="purple"
-          rows={6}
-          required
-        />
-
-        {/* Error Messages */}
-        {errors.length > 0 && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <div className="flex">
-              <svg className="w-5 h-5 text-red-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div>
-                {errors.map((error, index) => (
-                  <p key={index} className="text-sm text-red-800">{error}</p>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+        <div>
+          <FormTextArea
+            id="noteDetails"
+            label="Note Details"
+            value={noteDetails}
+            onChange={(e) => setNoteDetails(e.target.value)}
+            placeholder="Enter note details..."
+            icon={DocumentIcon}
+            themeColor="purple"
+            rows={6}
+            required
+          />
+          {validationErrors.details && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors.details}</p>
+          )}
+        </div>
 
         {/* Buttons */}
         <div className="flex space-x-3 pt-4">

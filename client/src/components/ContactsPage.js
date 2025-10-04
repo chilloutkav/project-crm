@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import EditContactModal from "./EditContactModal";
 import { formatCurrency } from "../utils/formatters";
+import logger from "../utils/logger";
 
 const ContactsPage = () => {
   const [contact, setContact] = useState(null);
@@ -23,7 +24,7 @@ const ContactsPage = () => {
         .single();
 
       if (contactError) {
-        console.error('Error fetching contact:', contactError);
+        logger.error('Error fetching contact:', contactError);
         return;
       }
 
@@ -34,13 +35,13 @@ const ContactsPage = () => {
         .eq('contact_id', id);
 
       if (dealsError) {
-        console.error('Error fetching deals:', dealsError);
+        logger.error('Error fetching deals:', dealsError);
       }
 
       setContact(contactData);
       setDeals(dealsData || []);
     } catch (error) {
-      console.error('Error:', error);
+      logger.error('Error:', error);
     } finally {
       setLoading(false);
     }

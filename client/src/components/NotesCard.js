@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { supabase } from "../supabaseClient";
 import EditNoteModal from "./EditNoteModal";
 import { formatDate } from "../utils/formatters";
+import logger from "../utils/logger";
 
 const NotesCard = ({ note, getDeal }) => {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -21,13 +22,13 @@ const NotesCard = ({ note, getDeal }) => {
         .eq('id', note.id);
 
       if (error) {
-        console.error('Error deleting note:', error);
+        logger.error('Error deleting note:', error);
         alert('Failed to delete note. Please try again.');
       } else {
         getDeal(); // Refresh the deal data
       }
     } catch (error) {
-      console.error('Error:', error);
+      logger.error('Error:', error);
       alert('Failed to delete note. Please try again.');
     } finally {
       setIsDeleting(false);

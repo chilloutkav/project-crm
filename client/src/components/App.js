@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
+import { ToastProvider } from "../contexts/ToastContext";
 import NavBar from "./NavBar";
 import HomePage from "./HomePage";
 import DashBoard from "./DashBoard";
@@ -51,7 +52,9 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </AuthProvider>
   );
 }

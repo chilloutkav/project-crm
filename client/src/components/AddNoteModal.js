@@ -2,13 +2,38 @@ import React, { useState } from "react";
 import { supabase } from "../supabaseClient";
 import { FormInput, FormTextArea, Button, Modal } from "./common";
 import { PlusIcon, TagIcon, DocumentIcon } from "./icons";
+import { validateData, noteSchema } from "../utils/validation";
+import { handleSupabaseError } from "../utils/errorHandler";
+import { useToast } from "../contexts/ToastContext";
+import logger from "../utils/logger";
 
 const AddNoteModal = ({ deal, getDeal, onClose }) => {
   const [noteTitle, setNoteTitle] = useState("");
   const [noteDetails, setNoteDetails] = useState("");
+  const [validationErrors, setValidationErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const toast = useToast();
+
+  const validateForm = () => {
+    const { success, errors } = validateData(noteSchema, {
+      title: noteTitle,
+      details: noteDetails
+    });
+
+    setValidationErrors(errors);
+    return success;
+  };
 
   async function handleSubmit(e) {
     e.preventDefault();
+
+    // Validate form before submission
+    if (!validateForm()) {
+      toast.error('Please fix the errors before submitting');
+      return;
+    }
+
+    setIsSubmitting(true);
 
     const { error } = await supabase
       .from('notes')
@@ -21,14 +46,18 @@ const AddNoteModal = ({ deal, getDeal, onClose }) => {
       ])
       .select();
 
+    setIsSubmitting(false);
+
     if (error) {
-      console.error('Error adding note:', error);
+      const friendlyMessage = handleSupabaseError(error);
+      toast.error(friendlyMessage);
+      logger.error('Error adding note:', error);
     } else {
+      toast.success('Note added successfully!');
       e.target.reset();
+      getDeal();
       onClose();
     }
-
-    getDeal();
   }
 
   return (
@@ -41,28 +70,38 @@ const AddNoteModal = ({ deal, getDeal, onClose }) => {
       iconBgColor="bg-purple-600"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        <FormInput
-          id="noteTitle"
-          label="Note Title"
-          value={noteTitle}
-          onChange={(e) => setNoteTitle(e.target.value)}
-          placeholder="Enter note title"
-          icon={TagIcon}
-          themeColor="purple"
-          required
-        />
+        <div>
+          <FormInput
+            id="noteTitle"
+            label="Note Title"
+            value={noteTitle}
+            onChange={(e) => setNoteTitle(e.target.value)}
+            placeholder="Enter note title"
+            icon={TagIcon}
+            themeColor="purple"
+            required
+          />
+          {validationErrors.title && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors.title}</p>
+          )}
+        </div>
 
-        <FormTextArea
-          id="noteDetails"
-          label="Details"
-          value={noteDetails}
-          onChange={(e) => setNoteDetails(e.target.value)}
-          placeholder="Enter note details..."
-          icon={DocumentIcon}
-          themeColor="purple"
-          rows={4}
-          required
-        />
+        <div>
+          <FormTextArea
+            id="noteDetails"
+            label="Details"
+            value={noteDetails}
+            onChange={(e) => setNoteDetails(e.target.value)}
+            placeholder="Enter note details..."
+            icon={DocumentIcon}
+            themeColor="purple"
+            rows={4}
+            required
+          />
+          {validationErrors.details && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors.details}</p>
+          )}
+        </div>
 
         {/* Buttons */}
         <div className="flex space-x-3 pt-4">
@@ -71,6 +110,7 @@ const AddNoteModal = ({ deal, getDeal, onClose }) => {
             onClick={onClose}
             variant="secondary"
             className="flex-1"
+            disabled={isSubmitting}
           >
             Cancel
           </Button>
@@ -79,8 +119,9 @@ const AddNoteModal = ({ deal, getDeal, onClose }) => {
             variant="purple"
             icon={PlusIcon}
             className="flex-1"
+            disabled={isSubmitting}
           >
-            Add Note
+            {isSubmitting ? 'Adding...' : 'Add Note'}
           </Button>
         </div>
       </form>

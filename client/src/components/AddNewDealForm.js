@@ -1,14 +1,46 @@
 import React, { useState } from "react";
 import { supabase } from "../supabaseClient";
+import { validateData, dealSchema } from "../utils/validation";
+import { handleSupabaseError } from "../utils/errorHandler";
+import { useToast } from "../contexts/ToastContext";
+import logger from "../utils/logger";
 
 const AddNewDealForm = ({ onAddDeal, user }) => {
   const [dealName, setDealName] = useState("");
   const [dealContact, setDealContact] = useState("");
   const [dealStage, setDealStage] = useState("");
   const [dealAmount, setDealAmount] = useState("");
+  const [validationErrors, setValidationErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const toast = useToast();
+
+  const validateForm = () => {
+    const { success, errors } = validateData(dealSchema, {
+      deal_name: dealName,
+      deal_stage: dealStage,
+      amount: parseFloat(dealAmount) || 0
+    });
+
+    setValidationErrors(errors);
+    return success;
+  };
 
   async function handleSubmit(e) {
     e.preventDefault();
+
+    // Validate form before submission
+    if (!validateForm()) {
+      toast.error('Please fix the errors before submitting');
+      return;
+    }
+
+    // Check that a contact is selected
+    if (!dealContact) {
+      toast.error('Please select a contact for this deal');
+      return;
+    }
+
+    setIsSubmitting(true);
 
     const { data, error } = await supabase
       .from('deals')
@@ -23,9 +55,14 @@ const AddNewDealForm = ({ onAddDeal, user }) => {
       ])
       .select();
 
+    setIsSubmitting(false);
+
     if (error) {
-      console.error('Error adding deal:', error);
+      const friendlyMessage = handleSupabaseError(error);
+      toast.error(friendlyMessage);
+      logger.error('Error adding deal:', error);
     } else {
+      toast.success('Deal added successfully!');
       e.target.reset();
       onAddDeal(data[0]);
     }
@@ -35,13 +72,21 @@ const AddNewDealForm = ({ onAddDeal, user }) => {
     <>
       <h1>Add a Deal!</h1>
       <form onSubmit={handleSubmit}>
-        <label>Enter your Deal Name</label>
-        <input
-          type="text"
-          id="dealName"
-          value={dealName}
-          onChange={(e) => setDealName(e.target.value)}
-        />
+        <div>
+          <label>Enter your Deal Name</label>
+          <input
+            type="text"
+            id="dealName"
+            value={dealName}
+            onChange={(e) => setDealName(e.target.value)}
+          />
+          {validationErrors.deal_name && (
+            <p style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+              {validationErrors.deal_name}
+            </p>
+          )}
+        </div>
+
         <label>Which Contact?</label>
         <select
           name="dealContact"
@@ -60,34 +105,53 @@ const AddNewDealForm = ({ onAddDeal, user }) => {
             );
           })}
         </select>
-        <label>Enter your Deal Stage</label>
-        <select
-          name="dealStage"
-          id="dealStage"
-          defaultValue={"default"}
-          onChange={(e) => setDealStage(e.target.value)}
-        >
-          <option value="default" disabled>
-            Choose Here
-          </option>
-          <option value="Appointment Scheduled">Appointment Scheduled</option>
-          <option value="Qualified to Buy">Qualified to Buy</option>
-          <option value="Presentation Scheduled">Presentation Scheduled</option>
-          <option value="Decision Maker Bought-In">
-            Decision Maker Bought-In
-          </option>
-          <option value="Contract Sent">Contract Sent</option>
-          <option value="Closed Won">Closed Won</option>
-          <option value="Closed Lost">Closed Lost</option>
-        </select>
-        <label>Amount</label>
-        <input
-          type="text"
-          id="dealAmount"
-          value={dealAmount}
-          onChange={(e) => setDealAmount(e.target.value)}
-        />
-        <button type="submit">Add Deal!</button>
+
+        <div>
+          <label>Enter your Deal Stage</label>
+          <select
+            name="dealStage"
+            id="dealStage"
+            defaultValue={"default"}
+            onChange={(e) => setDealStage(e.target.value)}
+          >
+            <option value="default" disabled>
+              Choose Here
+            </option>
+            <option value="Appointment Scheduled">Appointment Scheduled</option>
+            <option value="Qualified to Buy">Qualified to Buy</option>
+            <option value="Presentation Scheduled">Presentation Scheduled</option>
+            <option value="Decision Maker Bought-In">
+              Decision Maker Bought-In
+            </option>
+            <option value="Contract Sent">Contract Sent</option>
+            <option value="Closed Won">Closed Won</option>
+            <option value="Closed Lost">Closed Lost</option>
+          </select>
+          {validationErrors.deal_stage && (
+            <p style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+              {validationErrors.deal_stage}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label>Amount</label>
+          <input
+            type="text"
+            id="dealAmount"
+            value={dealAmount}
+            onChange={(e) => setDealAmount(e.target.value)}
+          />
+          {validationErrors.amount && (
+            <p style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+              {validationErrors.amount}
+            </p>
+          )}
+        </div>
+
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Adding...' : 'Add Deal!'}
+        </button>
       </form>
     </>
   );

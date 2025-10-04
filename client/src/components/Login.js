@@ -3,27 +3,30 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { FormInput, Button } from "./common";
 import { UserIcon, LockIcon } from "./icons";
+import { handleSupabaseError } from "../utils/errorHandler";
+import { useToast } from "../contexts/ToastContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { signIn } = useAuth();
+  const toast = useToast();
   let navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
     setIsLoading(true);
-    setErrors([]);
 
     const { error } = await signIn(email, password);
 
     setIsLoading(false);
     if (error) {
-      setErrors([error.message]);
+      const friendlyMessage = handleSupabaseError(error);
+      toast.error(friendlyMessage);
     } else {
+      toast.success('Successfully signed in!');
       navigate("/dashboard");
     }
   }
@@ -41,21 +44,23 @@ const Login = () => {
             <p className="mt-2 text-gray-600">Sign in to your CRM account</p>
           </div>
 
-          {/* Demo Credentials Notice */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div className="flex items-start">
-              <svg className="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div>
-                <p className="text-sm font-medium text-blue-800">Demo Account</p>
-                <p className="text-sm text-blue-700 mt-1">
-                  Email: <span className="font-mono font-semibold">demo1@example.com</span><br />
-                  Password: <span className="font-mono font-semibold">1234</span>
-                </p>
+          {/* Demo Credentials Notice - Development Only */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-start">
+                <svg className="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-medium text-blue-800">Demo Account</p>
+                  <p className="text-sm text-blue-700 mt-1">
+                    Email: <span className="font-mono font-semibold">demo1@example.com</span><br />
+                    Password: <span className="font-mono font-semibold">1234</span>
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -106,22 +111,6 @@ const Login = () => {
                 </button>
               </div>
             </div>
-
-            {/* Error Messages */}
-            {errors.length > 0 && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <div className="flex">
-                  <svg className="w-5 h-5 text-red-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div>
-                    {errors.map((error, index) => (
-                      <p key={index} className="text-sm text-red-800">{error}</p>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
 
             <Button
               type="submit"

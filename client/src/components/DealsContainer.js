@@ -4,6 +4,7 @@ import DealSearch from "./DealSearch";
 import AddDealModal from "./AddDealModal";
 import { supabase } from "../supabaseClient";
 import { formatCurrency } from "../utils/formatters";
+import logger from "../utils/logger";
 
 const DealsContainer = ({ user }) => {
   const [deals, setDeals] = useState([]);
@@ -34,12 +35,12 @@ const DealsContainer = ({ user }) => {
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Error fetching deals:', error);
+        logger.error('Error fetching deals:', error);
       } else {
         setDeals(data || []);
       }
     } catch (error) {
-      console.error('Error:', error);
+      logger.error('Error:', error);
     }
   };
 
