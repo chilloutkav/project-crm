@@ -68,6 +68,30 @@ const AddDealModal = ({ user, onAddDeal, onClose }) => {
 
     setIsSubmitting(true);
 
+    // Create optimistic deal with temporary ID
+    const tempId = `temp-${Date.now()}`;
+    const selectedContact = contacts.find(c => c.id === dealContact);
+    const optimisticDeal = {
+      id: tempId,
+      deal_name: dealName,
+      deal_stage: dealStage,
+      amount: parseInt(dealAmount),
+      user_id: user.id,
+      contact_id: dealContact,
+      created_at: new Date().toISOString(),
+      contacts: selectedContact ? {
+        name: selectedContact.name,
+        email: selectedContact.email,
+        company: selectedContact.company
+      } : null
+    };
+
+    // Optimistically update UI
+    onAddDeal(optimisticDeal);
+    onClose();
+    toast.success('Deal added successfully!');
+
+    // Make API call
     const { data, error } = await supabase
       .from('deals')
       .insert([
@@ -84,14 +108,14 @@ const AddDealModal = ({ user, onAddDeal, onClose }) => {
     setIsSubmitting(false);
 
     if (error) {
+      // Rollback: remove optimistic deal and show error
+      onAddDeal({ ...optimisticDeal, _shouldRemove: true });
       const friendlyMessage = handleSupabaseError(error);
       toast.error(friendlyMessage);
       logger.error('Error adding deal:', error);
     } else {
-      toast.success('Deal added successfully!');
-      e.target.reset();
-      onAddDeal(data[0]);
-      onClose();
+      // Replace optimistic deal with real data
+      onAddDeal({ ...data[0], _replaceId: tempId });
     }
   }
 

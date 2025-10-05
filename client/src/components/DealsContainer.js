@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import DealsList from "./DealsList";
 import DealSearch from "./DealSearch";
 import AddDealModal from "./AddDealModal";
+import SkeletonLoader from "./common/SkeletonLoader";
 import { supabase } from "../supabaseClient";
 import { formatCurrency } from "../utils/formatters";
 import logger from "../utils/logger";
@@ -11,9 +12,24 @@ const DealsContainer = ({ user }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStage, setSelectedStage] = useState("all");
   const [showDealModal, setShowDealModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const onAddDeal = (newDeal) => {
-    // Add new deal at the beginning (newest first)
+    // Handle optimistic UI rollback (error case)
+    if (newDeal._shouldRemove) {
+      setDeals(deals.filter(d => d.id !== newDeal.id));
+      return;
+    }
+
+    // Handle replacing optimistic deal with real data (success case)
+    if (newDeal._replaceId) {
+      setDeals(deals.map(d =>
+        d.id === newDeal._replaceId ? { ...newDeal, _replaceId: undefined } : d
+      ));
+      return;
+    }
+
+    // Normal add (optimistic) - Add new deal at the beginning (newest first)
     const displayedDeals = [newDeal, ...deals];
     setDeals(displayedDeals);
     setShowDealModal(false);
@@ -21,6 +37,7 @@ const DealsContainer = ({ user }) => {
 
   const getDeals = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from('deals')
         .select(`
@@ -41,6 +58,8 @@ const DealsContainer = ({ user }) => {
       }
     } catch (error) {
       logger.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -120,41 +139,47 @@ const DealsContainer = ({ user }) => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <StatCard
-            title="New Deals"
-            value={stats.newDealsAmount}
-            count={stats.newDealsCount}
-            icon={
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            }
-            color="bg-blue-100"
-          />
-          
-          <StatCard
-            title="In Progress"
-            value={stats.progressDealsAmount}
-            count={stats.progressDealsCount}
-            icon={
-              <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            }
-            color="bg-yellow-100"
-          />
-          
-          <StatCard
-            title="Closed Won"
-            value={stats.closedDealsAmount}
-            count={stats.closedDealsCount}
-            icon ={ 
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            }
-            color="bg-green-100"
-          />
+          {loading ? (
+            <SkeletonLoader type="stat" count={3} />
+          ) : (
+            <>
+              <StatCard
+                title="New Deals"
+                value={stats.newDealsAmount}
+                count={stats.newDealsCount}
+                icon={
+                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                }
+                color="bg-blue-100"
+              />
+
+              <StatCard
+                title="In Progress"
+                value={stats.progressDealsAmount}
+                count={stats.progressDealsCount}
+                icon={
+                  <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                }
+                color="bg-yellow-100"
+              />
+
+              <StatCard
+                title="Closed Won"
+                value={stats.closedDealsAmount}
+                count={stats.closedDealsCount}
+                icon ={
+                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                }
+                color="bg-green-100"
+              />
+            </>
+          )}
         </div>
 
         {/* Actions and Search */}
@@ -207,8 +232,14 @@ const DealsContainer = ({ user }) => {
               </div>
             </div>
           </div>
-          
-          <DealsList deals={displayedDeals} getDeals={getDeals} />
+
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+              <SkeletonLoader type="card" count={4} />
+            </div>
+          ) : (
+            <DealsList deals={displayedDeals} getDeals={getDeals} />
+          )}
         </div>
 
         {showDealModal && (

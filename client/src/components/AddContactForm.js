@@ -39,6 +39,24 @@ const AddContactForm = ({ user, onAddContact, onClose }) => {
 
     setIsSubmitting(true);
 
+    // Create optimistic contact with temporary ID
+    const tempId = `temp-${Date.now()}`;
+    const optimisticContact = {
+      id: tempId,
+      name: contactName,
+      email: contactEmail,
+      job_title: contactTitle,
+      company: contactCompany,
+      user_id: user.id,
+      created_at: new Date().toISOString()
+    };
+
+    // Optimistically update UI
+    onAddContact(optimisticContact);
+    onClose();
+    toast.success('Contact added successfully!');
+
+    // Make API call
     const { data, error } = await supabase
       .from('contacts')
       .insert([
@@ -55,14 +73,14 @@ const AddContactForm = ({ user, onAddContact, onClose }) => {
     setIsSubmitting(false);
 
     if (error) {
+      // Rollback: remove optimistic contact and show error
+      onAddContact({ ...optimisticContact, _shouldRemove: true });
       const friendlyMessage = handleSupabaseError(error);
       toast.error(friendlyMessage);
       logger.error('Error adding contact:', error);
     } else {
-      toast.success('Contact added successfully!');
-      e.target.reset();
-      onAddContact(data[0]);
-      onClose();
+      // Replace optimistic contact with real data
+      onAddContact({ ...data[0], _replaceId: tempId });
     }
   }
 

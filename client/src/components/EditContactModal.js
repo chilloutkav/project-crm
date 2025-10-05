@@ -49,6 +49,23 @@ const EditContactModal = ({ contact, onEditContact, onClose }) => {
 
     setIsLoading(true);
 
+    // Store original data for rollback
+    const originalContact = { ...contact };
+
+    // Create optimistic update
+    const optimisticContact = {
+      ...contact,
+      name: contactName,
+      email: contactEmail,
+      job_title: contactTitle,
+      company: contactCompany,
+    };
+
+    // Optimistically update UI
+    onEditContact(optimisticContact);
+    onClose();
+    toast.success('Contact updated successfully!');
+
     try {
       const { data, error } = await supabase
         .from('contacts')
@@ -62,15 +79,18 @@ const EditContactModal = ({ contact, onEditContact, onClose }) => {
         .select();
 
       if (error) {
+        // Rollback to original contact
+        onEditContact(originalContact);
         const friendlyMessage = handleSupabaseError(error);
         toast.error(friendlyMessage);
         logger.error('Error updating contact:', error);
       } else {
-        toast.success('Contact updated successfully!');
+        // Replace with real data from server (if different)
         onEditContact(data[0]);
-        onClose();
       }
     } catch (error) {
+      // Rollback to original contact
+      onEditContact(originalContact);
       toast.error('An unexpected error occurred. Please try again.');
       logger.error('Error:', error);
     } finally {

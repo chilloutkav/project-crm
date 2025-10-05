@@ -43,6 +43,21 @@ const EditNoteModal = ({ note, onEditNote, onClose }) => {
 
     setIsLoading(true);
 
+    // Store original data for rollback
+    const originalNote = { ...note };
+
+    // Create optimistic update
+    const optimisticNote = {
+      ...note,
+      title: noteTitle,
+      details: noteDetails,
+    };
+
+    // Optimistically update UI
+    onEditNote(optimisticNote);
+    onClose();
+    toast.success('Note updated successfully!');
+
     try {
       const { data, error } = await supabase
         .from('notes')
@@ -54,15 +69,18 @@ const EditNoteModal = ({ note, onEditNote, onClose }) => {
         .select();
 
       if (error) {
+        // Rollback to original note
+        onEditNote(originalNote);
         const friendlyMessage = handleSupabaseError(error);
         toast.error(friendlyMessage);
         logger.error('Error updating note:', error);
       } else {
-        toast.success('Note updated successfully!');
+        // Replace with real data from server (if different)
         onEditNote(data[0]);
-        onClose();
       }
     } catch (error) {
+      // Rollback to original note
+      onEditNote(originalNote);
       toast.error('An unexpected error occurred. Please try again.');
       logger.error('Error:', error);
     } finally {

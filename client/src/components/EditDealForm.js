@@ -8,7 +8,7 @@ import { handleSupabaseError } from "../utils/errorHandler";
 import { useToast } from "../contexts/ToastContext";
 import logger from "../utils/logger";
 
-const EditDealForm = ({ id, getDeal, deal }) => {
+const EditDealForm = ({ id, getDeal, deal, onEditDeal }) => {
   const [dealStage, setDealStage] = useState("");
   const [dealAmount, setDealAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -38,24 +38,55 @@ const EditDealForm = ({ id, getDeal, deal }) => {
 
     setIsLoading(true);
 
+    // Store original data for rollback
+    const originalDeal = { ...deal };
+
+    // Create optimistic update
+    const optimisticDeal = {
+      ...deal,
+      deal_stage: dealStage || deal.deal_stage,
+      amount: dealAmount ? parseInt(dealAmount) : deal.amount,
+    };
+
+    // Optimistically update UI if callback provided
+    if (onEditDeal) {
+      onEditDeal(optimisticDeal);
+      toast.success('Deal updated successfully!');
+    }
+
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('deals')
         .update({
           deal_stage: dealStage || deal.deal_stage,
           amount: dealAmount ? parseInt(dealAmount) : deal.amount,
         })
-        .eq('id', id);
+        .eq('id', id)
+        .select();
 
       if (error) {
+        // Rollback to original deal
+        if (onEditDeal) {
+          onEditDeal(originalDeal);
+        }
         const friendlyMessage = handleSupabaseError(error);
         toast.error(friendlyMessage);
         logger.error('Error updating deal:', error);
       } else {
-        toast.success('Deal updated successfully!');
-        getDeal();
+        if (onEditDeal) {
+          // Replace with real data from server (if different)
+          onEditDeal(data[0]);
+        } else {
+          // Fallback to old behavior
+          toast.success('Deal updated successfully!');
+          getDeal();
+        }
       }
     } catch (error) {
+      // Rollback to original deal
+      if (onEditDeal) {
+        onEditDeal(originalDeal);
+      }
       toast.error('An unexpected error occurred. Please try again.');
       logger.error('Error:', error);
     } finally {

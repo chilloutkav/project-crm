@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AddContactForm from "./AddContactForm";
 import ContactSearch from "./ContactSearch";
 import ContactsList from "./ContactsList";
+import SkeletonLoader from "./common/SkeletonLoader";
 import { supabase } from "../supabaseClient";
 import logger from "../utils/logger";
 
@@ -9,8 +10,24 @@ const ContactsContainer = ({ user }) => {
   const [contacts, setContacts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const onAddContact = (newContact) => {
+    // Handle optimistic UI rollback (error case)
+    if (newContact._shouldRemove) {
+      setContacts(contacts.filter(c => c.id !== newContact.id));
+      return;
+    }
+
+    // Handle replacing optimistic contact with real data (success case)
+    if (newContact._replaceId) {
+      setContacts(contacts.map(c =>
+        c.id === newContact._replaceId ? { ...newContact, _replaceId: undefined } : c
+      ));
+      return;
+    }
+
+    // Normal add (optimistic)
     const displayedContacts = [...contacts, newContact];
     setContacts(displayedContacts);
     setShowModal(false);
@@ -18,6 +35,7 @@ const ContactsContainer = ({ user }) => {
 
   const getContacts = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from('contacts')
         .select('*')
@@ -30,6 +48,8 @@ const ContactsContainer = ({ user }) => {
       }
     } catch (error) {
       logger.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,7 +95,13 @@ const ContactsContainer = ({ user }) => {
 
         {/* Contacts Grid */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-          <ContactsList contacts={displayedContacts} />
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+              <SkeletonLoader type="card" count={6} />
+            </div>
+          ) : (
+            <ContactsList contacts={displayedContacts} />
+          )}
         </div>
 
         {/* Add Contact Modal */}

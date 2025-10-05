@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { formatCurrency } from "../utils/formatters";
+import SkeletonLoader from "./common/SkeletonLoader";
 import logger from "../utils/logger";
 
 const Reports = ({ user }) => {
@@ -100,10 +101,31 @@ const Reports = ({ user }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading reports...</p>
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Header Skeleton */}
+          <div className="mb-8">
+            <div className="h-8 bg-gray-200 rounded w-1/4 mb-2 animate-pulse"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+          </div>
+
+          {/* Key Metrics Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <SkeletonLoader type="stat" count={4} />
+          </div>
+
+          {/* Pipeline Breakdown Skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <SkeletonLoader type="chart" count={2} />
+          </div>
+
+          {/* Summary Skeleton */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="h-5 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <SkeletonLoader type="stat" count={3} />
+            </div>
+          </div>
         </div>
       </div>
     );

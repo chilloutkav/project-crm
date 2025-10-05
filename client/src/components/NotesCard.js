@@ -4,7 +4,7 @@ import EditNoteModal from "./EditNoteModal";
 import { formatDate } from "../utils/formatters";
 import logger from "../utils/logger";
 
-const NotesCard = ({ note, getDeal }) => {
+const NotesCard = ({ note, getDeal, onDeleteNote, onEditNote }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
@@ -15,6 +15,14 @@ const NotesCard = ({ note, getDeal }) => {
 
     setIsDeleting(true);
 
+    // Store original note for rollback
+    const deletedNote = { ...note };
+
+    // Optimistically remove from UI if callback provided
+    if (onDeleteNote) {
+      onDeleteNote({ id: note.id, _shouldRemove: true });
+    }
+
     try {
       const { error } = await supabase
         .from('notes')
@@ -22,12 +30,23 @@ const NotesCard = ({ note, getDeal }) => {
         .eq('id', note.id);
 
       if (error) {
+        // Rollback: restore the note
+        if (onDeleteNote) {
+          onDeleteNote(deletedNote);
+        }
         logger.error('Error deleting note:', error);
         alert('Failed to delete note. Please try again.');
       } else {
-        getDeal(); // Refresh the deal data
+        if (!onDeleteNote) {
+          // Fallback to old behavior
+          getDeal();
+        }
       }
     } catch (error) {
+      // Rollback: restore the note
+      if (onDeleteNote) {
+        onDeleteNote(deletedNote);
+      }
       logger.error('Error:', error);
       alert('Failed to delete note. Please try again.');
     } finally {
@@ -37,7 +56,11 @@ const NotesCard = ({ note, getDeal }) => {
 
   const handleEditNote = (updatedNote) => {
     setShowEditModal(false);
-    getDeal(); // Refresh the deal data to show updated note
+    if (onEditNote) {
+      onEditNote(updatedNote);
+    } else {
+      getDeal(); // Fallback to old behavior
+    }
   };
 
   const handleCloseEditModal = () => {

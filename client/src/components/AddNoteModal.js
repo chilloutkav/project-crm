@@ -7,7 +7,7 @@ import { handleSupabaseError } from "../utils/errorHandler";
 import { useToast } from "../contexts/ToastContext";
 import logger from "../utils/logger";
 
-const AddNoteModal = ({ deal, getDeal, onClose }) => {
+const AddNoteModal = ({ deal, getDeal, onAddNote, onClose }) => {
   const [noteTitle, setNoteTitle] = useState("");
   const [noteDetails, setNoteDetails] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
@@ -35,7 +35,25 @@ const AddNoteModal = ({ deal, getDeal, onClose }) => {
 
     setIsSubmitting(true);
 
-    const { error } = await supabase
+    // Create optimistic note with temporary ID
+    const tempId = `temp-${Date.now()}`;
+    const optimisticNote = {
+      id: tempId,
+      title: noteTitle,
+      details: noteDetails,
+      deal_id: deal.id,
+      created_at: new Date().toISOString()
+    };
+
+    // Optimistically update UI if callback provided, otherwise fallback to getDeal
+    if (onAddNote) {
+      onAddNote(optimisticNote);
+      onClose();
+      toast.success('Note added successfully!');
+    }
+
+    // Make API call
+    const { data, error } = await supabase
       .from('notes')
       .insert([
         {
@@ -49,14 +67,24 @@ const AddNoteModal = ({ deal, getDeal, onClose }) => {
     setIsSubmitting(false);
 
     if (error) {
+      // Rollback: remove optimistic note and show error
+      if (onAddNote) {
+        onAddNote({ ...optimisticNote, _shouldRemove: true });
+      }
       const friendlyMessage = handleSupabaseError(error);
       toast.error(friendlyMessage);
       logger.error('Error adding note:', error);
     } else {
-      toast.success('Note added successfully!');
-      e.target.reset();
-      getDeal();
-      onClose();
+      if (onAddNote) {
+        // Replace optimistic note with real data
+        onAddNote({ ...data[0], _replaceId: tempId });
+      } else {
+        // Fallback to old behavior
+        toast.success('Note added successfully!');
+        e.target.reset();
+        getDeal();
+        onClose();
+      }
     }
   }
 
