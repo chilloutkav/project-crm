@@ -203,6 +203,28 @@ if (error) {
 }
 ```
 
+**Retry Logic (Oct 2025):**
+Automatic retry for transient network failures with exponential backoff:
+```javascript
+import { withRetry, retryRequest } from '../utils/errorHandler';
+
+// Option 1: Wrap Supabase queries with retry
+const result = await withRetry(async () => {
+  return await supabase.from('contacts').select().eq('user_id', userId);
+});
+
+// Option 2: Retry any async function
+const data = await retryRequest(async () => {
+  const response = await fetch('/api/data');
+  return response.json();
+}, 3, 1000); // 3 retries, 1000ms initial delay
+
+// Retry logic features:
+// - Default 3 retries with exponential backoff (1s, 2s, 4s)
+// - Only retries network errors (not auth/validation errors)
+// - Throws error if all retries fail
+```
+
 ### Toast Notifications (`contexts/ToastContext.js`)
 Global toast notification system:
 ```javascript
@@ -229,6 +251,30 @@ function MyComponent() {
 - Manual dismiss with close button
 - Positioned top-right corner
 - Slide-in animation
+
+### Offline Detection (`hooks/useOnlineStatus.js`)
+Real-time detection of network connectivity status (Oct 2025):
+```javascript
+import useOnlineStatus from '../hooks/useOnlineStatus';
+
+function MyComponent() {
+  const isOnline = useOnlineStatus();
+
+  if (!isOnline) {
+    return <div>You are offline. Please check your internet connection.</div>;
+  }
+
+  // Normal component rendering
+  return <div>Connected to the internet</div>;
+}
+```
+
+**Features:**
+- Automatic detection of online/offline status
+- Real-time updates when connection changes
+- Browser-native `navigator.onLine` API
+- Event listeners for 'online' and 'offline' events
+- App-wide offline banner displayed at top when disconnected (yellow alert)
 
 ### Form Validation & Error Handling Pattern
 **Comprehensive validation pattern** implemented across all 9 forms/modals (Oct 2025):

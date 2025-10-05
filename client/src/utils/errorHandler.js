@@ -113,3 +113,46 @@ export const isAuthError = (error) => {
          errorMessage.includes('authentication') ||
          errorMessage.includes('unauthorized');
 };
+
+/**
+ * Retry a failed request with exponential backoff
+ * @param {Function} fn - Async function to retry (should return a Promise)
+ * @param {number} retries - Number of retry attempts (default: 3)
+ * @param {number} delay - Initial delay in milliseconds (default: 1000)
+ * @returns {Promise} - Result of the function call
+ * @throws {Error} - Throws the last error if all retries fail
+ */
+export const retryRequest = async (fn, retries = 3, delay = 1000) => {
+  try {
+    return await fn();
+  } catch (error) {
+    // Don't retry auth or validation errors - these won't be fixed by retrying
+    if (isAuthError(error) || !isNetworkError(error)) {
+      throw error;
+    }
+
+    // If we're out of retries, throw the error
+    if (retries === 0) {
+      throw error;
+    }
+
+    // Wait for the delay period, then retry with exponential backoff
+    await new Promise(resolve => setTimeout(resolve, delay));
+    return retryRequest(fn, retries - 1, delay * 2);
+  }
+};
+
+/**
+ * Wrap a Supabase query with retry logic
+ * @param {Function} queryFn - Async function that returns a Supabase query
+ * @param {number} retries - Number of retry attempts (default: 3)
+ * @returns {Promise} - Result of the query
+ *
+ * @example
+ * const result = await withRetry(async () => {
+ *   return await supabase.from('contacts').select().eq('user_id', userId);
+ * });
+ */
+export const withRetry = async (queryFn, retries = 3) => {
+  return retryRequest(queryFn, retries);
+};
