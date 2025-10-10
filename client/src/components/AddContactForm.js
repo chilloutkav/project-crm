@@ -28,6 +28,25 @@ const AddContactForm = ({ user, onAddContact, onClose }) => {
     return success;
   };
 
+  // Clear error for a specific field if it becomes valid
+  const clearErrorIfValid = (fieldName, value) => {
+    if (validationErrors[fieldName]) {
+      const testData = {
+        name: contactName,
+        email: contactEmail,
+        job_title: contactTitle,
+        company: contactCompany,
+        [fieldName]: value
+      };
+
+      const { errors } = validateData(contactSchema, testData);
+
+      if (!errors[fieldName]) {
+        setValidationErrors(prev => ({ ...prev, [fieldName]: undefined }));
+      }
+    }
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -99,7 +118,10 @@ const AddContactForm = ({ user, onAddContact, onClose }) => {
             id="contactName"
             label="Contact Name"
             value={contactName}
-            onChange={(e) => setContactName(e.target.value)}
+            onChange={(e) => {
+              setContactName(e.target.value);
+              clearErrorIfValid('name', e.target.value);
+            }}
             placeholder="Enter contact name"
             icon={UserIcon}
             themeColor="blue"
@@ -116,7 +138,10 @@ const AddContactForm = ({ user, onAddContact, onClose }) => {
             label="Email Address"
             type="email"
             value={contactEmail}
-            onChange={(e) => setContactEmail(e.target.value)}
+            onChange={(e) => {
+              setContactEmail(e.target.value);
+              clearErrorIfValid('email', e.target.value);
+            }}
             placeholder="Enter email address"
             icon={EmailIcon}
             themeColor="blue"
@@ -131,7 +156,10 @@ const AddContactForm = ({ user, onAddContact, onClose }) => {
             id="contactTitle"
             label="Job Title"
             value={contactTitle}
-            onChange={(e) => setContactTitle(e.target.value)}
+            onChange={(e) => {
+              setContactTitle(e.target.value);
+              clearErrorIfValid('job_title', e.target.value);
+            }}
             placeholder="Enter job title"
             icon={BriefcaseIcon}
             themeColor="blue"
@@ -146,7 +174,10 @@ const AddContactForm = ({ user, onAddContact, onClose }) => {
             id="contactCompany"
             label="Company"
             value={contactCompany}
-            onChange={(e) => setContactCompany(e.target.value)}
+            onChange={(e) => {
+              setContactCompany(e.target.value);
+              clearErrorIfValid('company', e.target.value);
+            }}
             placeholder="Enter company name"
             icon={BuildingIcon}
             themeColor="blue"

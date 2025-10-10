@@ -6,7 +6,7 @@ import { UserIcon, LockIcon } from "./icons";
 import { handleSupabaseError } from "../utils/errorHandler";
 import { useToast } from "../contexts/ToastContext";
 
-const Login = () => {
+const Login = ({ setShowLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -126,6 +126,18 @@ const Login = () => {
               {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
+
+          {setShowLogin && (
+            <div className="text-center mt-6">
+              <p className="text-gray-600 mb-4">Don't have an account?</p>
+              <button
+                onClick={() => setShowLogin(false)}
+                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 px-4 rounded-lg font-medium transition-colors duration-200"
+              >
+                Create Account
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

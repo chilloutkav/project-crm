@@ -23,32 +23,32 @@ const DealPage = () => {
   };
 
   const onAddNote = (newNote) => {
-    // Handle optimistic UI rollback (error case)
-    if (newNote._shouldRemove) {
-      setDeal({
-        ...deal,
-        notes: deal.notes.filter(n => n.id !== newNote.id)
-      });
-      return;
-    }
+    // Use functional state update to avoid stale state
+    setDeal(prevDeal => {
+      // Handle optimistic UI rollback (error case)
+      if (newNote._shouldRemove) {
+        return {
+          ...prevDeal,
+          notes: prevDeal.notes.filter(n => n.id !== newNote.id)
+        };
+      }
 
-    // Handle replacing optimistic note with real data (success case)
-    if (newNote._replaceId) {
-      setDeal({
-        ...deal,
-        notes: deal.notes.map(n =>
-          n.id === newNote._replaceId ? { ...newNote, _replaceId: undefined } : n
-        )
-      });
-      return;
-    }
+      // Handle replacing optimistic note with real data (success case)
+      if (newNote._replaceId) {
+        return {
+          ...prevDeal,
+          notes: prevDeal.notes.map(n =>
+            n.id === newNote._replaceId ? { ...newNote, _replaceId: undefined } : n
+          )
+        };
+      }
 
-    // Normal add (optimistic)
-    setDeal({
-      ...deal,
-      notes: [...(deal.notes || []), newNote]
+      // Normal add (optimistic)
+      return {
+        ...prevDeal,
+        notes: [...(prevDeal.notes || []), newNote]
+      };
     });
-    setShowNoteModal(false);
   };
 
   const onEditDeal = (updatedDeal) => {

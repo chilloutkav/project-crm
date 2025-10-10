@@ -19,19 +19,20 @@ Comprehensive testing plan for all security hardening and quality improvements i
 
 | Test # | Password Input | Expected Result | Strength Meter | Notes |
 |--------|---------------|-----------------|----------------|-------|
-| 1.1 | `abc123` | ❌ Error: Missing uppercase, special char | RED | Only lowercase + numbers |
-| 1.2 | `Abc123` | ❌ Error: Missing special char | YELLOW | Missing 1 requirement |
-| 1.3 | `Abc123!@` | ✅ Success: All checks pass | GREEN | Valid strong password |
-| 1.4 | `PASSWORD123!` | ❌ Error: Missing lowercase | YELLOW | Missing 1 requirement |
-| 1.5 | `password!@#` | ❌ Error: Missing uppercase, number | YELLOW | Missing 2 requirements |
-| 1.6 | `short!A1` | ❌ Error: Less than 8 chars | RED | Too short (7 chars) |
-| 1.7 | `VeryLongPassword123!@#` | ✅ Success: All requirements met | GREEN | Extra long valid password |
+| 1.1 | `abc123` | ❌ Error: Missing uppercase, special char | RED | Only 2/5 requirements (lowercase + numbers) |
+| 1.2 | `Abc123` | ❌ Error: Too short, missing special char | RED | Only 3/5 requirements (6 chars) |
+| 1.3 | `Abc123!@` | ✅ Success: All checks pass | GREEN | Valid strong password (5/5) |
+| 1.4 | `PASSWORD123!` | ❌ Error: Missing lowercase | YELLOW | 4/5 requirements met |
+| 1.5 | `password!@#` | ❌ Error: Missing uppercase, number | YELLOW | 4/5 requirements met |
+| 1.6 | `short!A1` | ✅ Success: All requirements met | GREEN | Exactly 8 chars, all 5/5 requirements |
+| 1.7 | `VeryLongPassword123!@#` | ✅ Success: All requirements met | GREEN | Extra long valid password (5/5) |
 
 ### Verification Steps
-1. Navigate to signup page (`http://localhost:4000/signup`)
-2. Focus on password field
-3. Type password characters slowly
-4. **Verify real-time updates:**
+1. Navigate to login page (`http://localhost:4000`)
+2. Click "Create Account" button at bottom to access SignUp page
+3. Focus on password field
+4. Type password characters slowly
+5. **Verify real-time updates:**
    - Strength meter changes color (red → yellow → green)
    - Progress bar animates (0% → 100%)
    - Checklist items show ✓ or ✗ for each requirement:
@@ -40,8 +41,13 @@ Comprehensive testing plan for all security hardening and quality improvements i
      - ✓ Contains lowercase letter (a-z)
      - ✓ Contains number (0-9)
      - ✓ Contains special character (!@#$%^&*)
-5. Try submitting form with weak password
-6. **Expected:** Form submission prevented, error toast displayed
+6. Try submitting form with weak password
+7. **Expected:** Form submission prevented, error toast displayed
+
+### Testing Status: ✅ COMPLETED (Oct 9, 2025)
+- All 7 test cases passed
+- Real-time validation working as expected
+- Bug fix applied: Added "Create Account" button to Login page
 
 ### Password Requirements
 - **Minimum Length:** 8 characters

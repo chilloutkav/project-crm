@@ -27,6 +27,23 @@ const EditDealForm = ({ id, getDeal, deal, onEditDeal }) => {
     return success;
   };
 
+  // Clear error for a specific field if it becomes valid
+  const clearErrorIfValid = (fieldName, value) => {
+    if (validationErrors[fieldName]) {
+      const testData = {
+        deal_name: deal.deal_name,
+        deal_stage: fieldName === 'deal_stage' ? value : (dealStage || deal.deal_stage),
+        amount: fieldName === 'amount' ? (parseFloat(value) || 0) : (dealAmount ? parseFloat(dealAmount) : deal.amount)
+      };
+
+      const { errors } = validateData(dealSchema, testData);
+
+      if (!errors[fieldName]) {
+        setValidationErrors(prev => ({ ...prev, [fieldName]: undefined }));
+      }
+    }
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -112,7 +129,10 @@ const EditDealForm = ({ id, getDeal, deal, onEditDeal }) => {
             id="dealStage"
             label="Deal Stage"
             value={dealStage || deal.deal_stage}
-            onChange={(e) => setDealStage(e.target.value)}
+            onChange={(e) => {
+              setDealStage(e.target.value);
+              clearErrorIfValid('deal_stage', e.target.value);
+            }}
             options={DEAL_STAGES}
             icon={StageIcon}
             themeColor="green"
@@ -128,7 +148,10 @@ const EditDealForm = ({ id, getDeal, deal, onEditDeal }) => {
             label="Amount ($)"
             type="number"
             value={dealAmount}
-            onChange={(e) => setDealAmount(e.target.value)}
+            onChange={(e) => {
+              setDealAmount(e.target.value);
+              clearErrorIfValid('amount', e.target.value);
+            }}
             placeholder={`Current: $${deal.amount?.toLocaleString() || '0'}`}
             icon={DollarIcon}
             themeColor="green"

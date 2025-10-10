@@ -22,7 +22,7 @@ function AppContent() {
     <div className="App">
       {/* Offline Banner */}
       {!isOnline && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-yellow-500 text-white px-4 py-3 shadow-lg">
+        <div className="fixed top-0 left-0 right-0 z-[60] bg-yellow-500 text-white px-4 py-3 shadow-lg">
           <div className="container mx-auto flex items-center justify-center">
             <svg
               className="w-5 h-5 mr-2"

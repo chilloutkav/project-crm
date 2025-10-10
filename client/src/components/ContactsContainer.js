@@ -15,22 +15,20 @@ const ContactsContainer = ({ user }) => {
   const onAddContact = (newContact) => {
     // Handle optimistic UI rollback (error case)
     if (newContact._shouldRemove) {
-      setContacts(contacts.filter(c => c.id !== newContact.id));
+      setContacts(prevContacts => prevContacts.filter(c => c.id !== newContact.id));
       return;
     }
 
     // Handle replacing optimistic contact with real data (success case)
     if (newContact._replaceId) {
-      setContacts(contacts.map(c =>
+      setContacts(prevContacts => prevContacts.map(c =>
         c.id === newContact._replaceId ? { ...newContact, _replaceId: undefined } : c
       ));
       return;
     }
 
-    // Normal add (optimistic)
-    const displayedContacts = [...contacts, newContact];
-    setContacts(displayedContacts);
-    setShowModal(false);
+    // Normal add (optimistic) - use functional update to avoid stale state
+    setContacts(prevContacts => [...prevContacts, newContact]);
   };
 
   const getContacts = async () => {

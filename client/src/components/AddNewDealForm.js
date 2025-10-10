@@ -25,6 +25,24 @@ const AddNewDealForm = ({ onAddDeal, user }) => {
     return success;
   };
 
+  // Clear error for a specific field if it becomes valid
+  const clearErrorIfValid = (fieldName, value) => {
+    if (validationErrors[fieldName]) {
+      const testData = {
+        deal_name: dealName,
+        deal_stage: dealStage,
+        amount: parseFloat(dealAmount) || 0,
+        [fieldName]: fieldName === 'amount' ? parseFloat(value) || 0 : value
+      };
+
+      const { errors } = validateData(dealSchema, testData);
+
+      if (!errors[fieldName]) {
+        setValidationErrors(prev => ({ ...prev, [fieldName]: undefined }));
+      }
+    }
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -78,7 +96,10 @@ const AddNewDealForm = ({ onAddDeal, user }) => {
             type="text"
             id="dealName"
             value={dealName}
-            onChange={(e) => setDealName(e.target.value)}
+            onChange={(e) => {
+              setDealName(e.target.value);
+              clearErrorIfValid('deal_name', e.target.value);
+            }}
           />
           {validationErrors.deal_name && (
             <p style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
@@ -112,7 +133,10 @@ const AddNewDealForm = ({ onAddDeal, user }) => {
             name="dealStage"
             id="dealStage"
             defaultValue={"default"}
-            onChange={(e) => setDealStage(e.target.value)}
+            onChange={(e) => {
+              setDealStage(e.target.value);
+              clearErrorIfValid('deal_stage', e.target.value);
+            }}
           >
             <option value="default" disabled>
               Choose Here
@@ -140,7 +164,10 @@ const AddNewDealForm = ({ onAddDeal, user }) => {
             type="text"
             id="dealAmount"
             value={dealAmount}
-            onChange={(e) => setDealAmount(e.target.value)}
+            onChange={(e) => {
+              setDealAmount(e.target.value);
+              clearErrorIfValid('amount', e.target.value);
+            }}
           />
           {validationErrors.amount && (
             <p style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
