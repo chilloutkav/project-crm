@@ -176,6 +176,7 @@ const SignUp = () => {
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? (
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -320,6 +321,7 @@ const SignUp = () => {
             type="button"
             onClick={() => setShowPasswordConfirmation(!showPasswordConfirmation)}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+            aria-label={showPasswordConfirmation ? "Hide password confirmation" : "Show password confirmation"}
           >
             {showPasswordConfirmation ? (
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

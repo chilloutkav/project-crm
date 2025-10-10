@@ -19,7 +19,7 @@ function AppContent() {
   if (!user) return <HomePage />;
 
   return (
-    <div className="App">
+    <main className="App">
       {/* Offline Banner */}
       {!isOnline && (
         <div className="fixed top-0 left-0 right-0 z-[60] bg-yellow-500 text-white px-4 py-3 shadow-lg">
@@ -68,7 +68,7 @@ function AppContent() {
           element={<Reports user={user} />}
         />
       </Routes>
-    </div>
+    </main>
   );
 }
 

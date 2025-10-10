@@ -93,6 +93,7 @@ const NotesCard = ({ note, getDeal, onDeleteNote, onEditNote }) => {
             onClick={() => setShowEditModal(true)}
             className="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors duration-200"
             title="Edit note"
+            aria-label="Edit note"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -103,6 +104,7 @@ const NotesCard = ({ note, getDeal, onDeleteNote, onEditNote }) => {
             disabled={isDeleting}
             className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             title="Delete note"
+            aria-label="Delete note"
           >
             {isDeleting ? (
               <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
