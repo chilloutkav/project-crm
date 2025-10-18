@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { FormInput, Button, Modal } from "./common";
 import { UserIcon, EmailIcon, BriefcaseIcon, BuildingIcon, EditIcon, CheckIcon } from "./icons";
+import CompanyDropdown from "./CompanyDropdown";
 import { validateData, contactSchema } from "../utils/validation";
 import { handleSupabaseError } from "../utils/errorHandler";
 import { useToast } from "../contexts/ToastContext";
@@ -11,10 +12,29 @@ const EditContactModal = ({ contact, onEditContact, onClose }) => {
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactTitle, setContactTitle] = useState("");
-  const [contactCompany, setContactCompany] = useState("");
+  const [companies, setCompanies] = useState([]);
+  const [companyId, setCompanyId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
   const toast = useToast();
+
+  // Fetch companies on component mount
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const { data } = await supabase
+          .from('companies')
+          .select('id, company_name')
+          .order('company_name');
+
+        if (data) setCompanies(data);
+      } catch (error) {
+        logger.error('Error fetching companies:', error);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
 
   // Pre-populate form with existing contact data
   useEffect(() => {
@@ -22,7 +42,7 @@ const EditContactModal = ({ contact, onEditContact, onClose }) => {
       setContactName(contact.name || "");
       setContactEmail(contact.email || "");
       setContactTitle(contact.job_title || "");
-      setContactCompany(contact.company || "");
+      setCompanyId(contact.company_id || null);
     }
   }, [contact]);
 
@@ -31,7 +51,7 @@ const EditContactModal = ({ contact, onEditContact, onClose }) => {
       name: contactName,
       email: contactEmail,
       job_title: contactTitle,
-      company: contactCompany
+      company: ""
     });
 
     setValidationErrors(errors);
@@ -45,7 +65,7 @@ const EditContactModal = ({ contact, onEditContact, onClose }) => {
         name: contactName,
         email: contactEmail,
         job_title: contactTitle,
-        company: contactCompany,
+        company: "",
         [fieldName]: value
       };
 
@@ -77,7 +97,8 @@ const EditContactModal = ({ contact, onEditContact, onClose }) => {
       name: contactName,
       email: contactEmail,
       job_title: contactTitle,
-      company: contactCompany,
+      company_id: companyId,
+      companies: companyId ? companies.find(c => c.id === companyId) : null,
     };
 
     // Optimistically update UI
@@ -92,10 +113,10 @@ const EditContactModal = ({ contact, onEditContact, onClose }) => {
           name: contactName,
           email: contactEmail,
           job_title: contactTitle,
-          company: contactCompany,
+          company_id: companyId || null,
         })
         .eq('id', contact.id)
-        .select();
+        .select('*, companies(company_name, id)');
 
       if (error) {
         // Rollback to original contact
@@ -185,21 +206,15 @@ const EditContactModal = ({ contact, onEditContact, onClose }) => {
         </div>
 
         <div>
-          <FormInput
-            id="contactCompany"
-            label="Company"
-            value={contactCompany}
-            onChange={(e) => {
-              setContactCompany(e.target.value);
-              clearErrorIfValid('company', e.target.value);
-            }}
-            placeholder="Enter company name"
-            icon={BuildingIcon}
-            themeColor="blue"
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Company (Optional)
+          </label>
+          <CompanyDropdown
+            companies={companies}
+            value={companyId}
+            onChange={(selectedId) => setCompanyId(selectedId)}
+            isClearable={true}
           />
-          {validationErrors.company && (
-            <p className="mt-1 text-sm text-red-600">{validationErrors.company}</p>
-          )}
         </div>
 
         {/* Buttons */}

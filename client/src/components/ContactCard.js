@@ -27,12 +27,16 @@ const ContactCard = ({ contact }) => {
           <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
             {contact.name}
           </h3>
-          <p className="text-sm text-gray-600 font-medium">
-            {contact.job_title}
-          </p>
-          <p className="text-sm text-blue-600 font-medium">
-            {contact.company}
-          </p>
+          {contact.job_title && (
+            <p className="text-sm text-gray-600 font-medium">
+              {contact.job_title}
+            </p>
+          )}
+          {(contact.companies?.company_name || contact.company) && (
+            <p className="text-sm text-orange-600 font-medium">
+              {contact.companies?.company_name || contact.company}
+            </p>
+          )}
         </div>
 
         {/* Email */}

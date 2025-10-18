@@ -36,7 +36,7 @@ const ContactsContainer = ({ user }) => {
       setLoading(true);
       const { data, error } = await supabase
         .from('contacts')
-        .select('*')
+        .select('*, companies(company_name, id)')
         .eq('user_id', user.id);
 
       if (error) {

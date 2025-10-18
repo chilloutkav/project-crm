@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Building2 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 
 const NavBar = () => {
@@ -53,6 +54,17 @@ const NavBar = () => {
           <div className="hidden md:block">
             <div className="flex space-x-4">
               <NavLink to="/dashboard">Dashboard</NavLink>
+              <Link
+                to="/dashboard/companies"
+                className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  isActive("/dashboard/companies")
+                    ? "text-orange-600 bg-orange-50"
+                    : "text-gray-600 hover:text-orange-600 hover:bg-gray-50"
+                }`}
+              >
+                <Building2 className="mr-2 h-4 w-4" />
+                Companies
+              </Link>
               <NavLink to="/dashboard/contacts">Contacts</NavLink>
               <NavLink to="/dashboard/deals">Deals</NavLink>
               <NavLink to="/dashboard/reports">Reports</NavLink>
@@ -94,6 +106,17 @@ const NavBar = () => {
           <div className="md:hidden border-t border-gray-200 py-4">
             <div className="flex flex-col space-y-2">
               <NavLink to="/dashboard">Dashboard</NavLink>
+              <Link
+                to="/dashboard/companies"
+                className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  isActive("/dashboard/companies")
+                    ? "text-orange-600 bg-orange-50"
+                    : "text-gray-600 hover:text-orange-600 hover:bg-gray-50"
+                }`}
+              >
+                <Building2 className="mr-2 h-4 w-4" />
+                Companies
+              </Link>
               <NavLink to="/dashboard/contacts">Contacts</NavLink>
               <NavLink to="/dashboard/deals">Deals</NavLink>
               <NavLink to="/dashboard/reports">Reports</NavLink>

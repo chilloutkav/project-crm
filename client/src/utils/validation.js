@@ -62,6 +62,30 @@ export const noteSchema = z.object({
     .max(5000, 'Details must not exceed 5000 characters')
 });
 
+// Company validation schema (with Unicode support for international names)
+export const companySchema = z.object({
+  company_name: z.string()
+    .min(2, 'Company name must be at least 2 characters')
+    .max(200, 'Company name must not exceed 200 characters')
+    .regex(/^[\p{L}\p{N}\s&.,'\-()]+$/u, 'Company name contains invalid characters'),
+
+  owner_name: z.string()
+    .min(2, 'Owner name must be at least 2 characters')
+    .max(100, 'Owner name must not exceed 100 characters')
+    .optional()
+    .or(z.literal('')),
+
+  description: z.string()
+    .max(1000, 'Description must not exceed 1000 characters')
+    .optional()
+    .or(z.literal('')),
+
+  annual_rev: z.string()
+    .max(100, 'Annual revenue must not exceed 100 characters')
+    .optional()
+    .or(z.literal(''))
+});
+
 // User signup validation schema
 export const signupSchema = z.object({
   first_name: z.string()

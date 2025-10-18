@@ -5,6 +5,8 @@ import useOnlineStatus from "../hooks/useOnlineStatus";
 import NavBar from "./NavBar";
 import HomePage from "./HomePage";
 import DashBoard from "./DashBoard";
+import CompaniesContainer from "./CompaniesContainer";
+import CompanyPage from "./CompanyPage";
 import ContactsContainer from "./ContactsContainer";
 import ContactsPage from "./ContactsPage";
 import DealPage from "./DealPage";
@@ -53,6 +55,11 @@ function AppContent() {
           path="/dashboard"
           element={<DashBoard user={user} />}
         />
+        <Route
+          path="/dashboard/companies"
+          element={<CompaniesContainer user={user} />}
+        />
+        <Route path="/dashboard/companies/:id" element={<CompanyPage />} />
         <Route
           path="/dashboard/deals"
           element={<DealsContainer user={user} />}

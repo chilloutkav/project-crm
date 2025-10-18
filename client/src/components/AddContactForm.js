@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { FormInput, Button, Modal } from "./common";
 import { UserIcon, EmailIcon, BriefcaseIcon, BuildingIcon, PlusIcon } from "./icons";
+import CompanyDropdown from "./CompanyDropdown";
 import { validateData, contactSchema } from "../utils/validation";
 import { handleSupabaseError } from "../utils/errorHandler";
 import { useToast } from "../contexts/ToastContext";
@@ -11,17 +12,37 @@ const AddContactForm = ({ user, onAddContact, onClose }) => {
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactTitle, setContactTitle] = useState("");
-  const [contactCompany, setContactCompany] = useState("");
+  const [companies, setCompanies] = useState([]);
+  const [companyId, setCompanyId] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toast = useToast();
+
+  // Fetch companies on component mount
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const { data } = await supabase
+          .from('companies')
+          .select('id, company_name')
+          .eq('user_id', user.id)
+          .order('company_name');
+
+        if (data) setCompanies(data);
+      } catch (error) {
+        logger.error('Error fetching companies:', error);
+      }
+    };
+
+    fetchCompanies();
+  }, [user.id]);
 
   const validateForm = () => {
     const { success, errors } = validateData(contactSchema, {
       name: contactName,
       email: contactEmail,
       job_title: contactTitle,
-      company: contactCompany
+      company: ""
     });
 
     setValidationErrors(errors);
@@ -35,7 +56,7 @@ const AddContactForm = ({ user, onAddContact, onClose }) => {
         name: contactName,
         email: contactEmail,
         job_title: contactTitle,
-        company: contactCompany,
+        company: "",
         [fieldName]: value
       };
 
@@ -65,7 +86,8 @@ const AddContactForm = ({ user, onAddContact, onClose }) => {
       name: contactName,
       email: contactEmail,
       job_title: contactTitle,
-      company: contactCompany,
+      company_id: companyId,
+      companies: companyId ? companies.find(c => c.id === companyId) : null,
       user_id: user.id,
       created_at: new Date().toISOString()
     };
@@ -83,11 +105,11 @@ const AddContactForm = ({ user, onAddContact, onClose }) => {
           name: contactName,
           email: contactEmail,
           job_title: contactTitle,
-          company: contactCompany,
+          company_id: companyId || null,
           user_id: user.id,
         }
       ])
-      .select();
+      .select('*, companies(company_name, id)');
 
     setIsSubmitting(false);
 
@@ -170,21 +192,15 @@ const AddContactForm = ({ user, onAddContact, onClose }) => {
         </div>
 
         <div>
-          <FormInput
-            id="contactCompany"
-            label="Company"
-            value={contactCompany}
-            onChange={(e) => {
-              setContactCompany(e.target.value);
-              clearErrorIfValid('company', e.target.value);
-            }}
-            placeholder="Enter company name"
-            icon={BuildingIcon}
-            themeColor="blue"
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Company (Optional)
+          </label>
+          <CompanyDropdown
+            companies={companies}
+            value={companyId}
+            onChange={(selectedId) => setCompanyId(selectedId)}
+            isClearable={true}
           />
-          {validationErrors.company && (
-            <p className="mt-1 text-sm text-red-600">{validationErrors.company}</p>
-          )}
         </div>
 
         {/* Buttons */}

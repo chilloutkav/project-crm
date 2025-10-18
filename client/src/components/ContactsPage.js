@@ -17,10 +17,10 @@ const ContactsPage = () => {
     try {
       setLoading(true);
 
-      // Fetch contact details
+      // Fetch contact details with company information
       const { data: contactData, error: contactError } = await supabase
         .from('contacts')
-        .select('*')
+        .select('*, companies(company_name, id)')
         .eq('id', id)
         .single();
 
@@ -161,8 +161,17 @@ const ContactsPage = () => {
                 </div>
               </div>
               <h2 className="text-xl font-semibold text-gray-900 mb-2">{contact.name}</h2>
-              <p className="text-blue-600 font-medium">{contact.job_title}</p>
-              <p className="text-gray-600">{contact.company}</p>
+              {contact.job_title && (
+                <p className="text-blue-600 font-medium">{contact.job_title}</p>
+              )}
+              {contact.companies?.company_name && (
+                <Link
+                  to={`/dashboard/companies/${contact.companies.id}`}
+                  className="text-orange-600 hover:text-orange-700 font-medium underline transition-colors duration-200"
+                >
+                  {contact.companies.company_name}
+                </Link>
+              )}
             </div>
           </div>
 
@@ -186,7 +195,16 @@ const ContactsPage = () => {
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-500">Company</label>
-                <p className="text-gray-900">{contact.company || 'Not specified'}</p>
+                {contact.companies?.company_name ? (
+                  <Link
+                    to={`/dashboard/companies/${contact.companies.id}`}
+                    className="block text-orange-600 hover:text-orange-700 transition-colors duration-200 underline"
+                  >
+                    {contact.companies.company_name}
+                  </Link>
+                ) : (
+                  <p className="text-gray-900">Not specified</p>
+                )}
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-500">Job Title</label>
