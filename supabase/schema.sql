@@ -35,7 +35,8 @@ CREATE TABLE public.contacts (
   image_url TEXT,
   email TEXT,
   job_title TEXT,
-  company TEXT,
+  company TEXT, -- LEGACY: Kept for 2-week safety period after migration
+  company_id UUID REFERENCES public.companies(id) ON DELETE SET NULL,
   user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -50,6 +51,7 @@ CREATE TABLE public.deals (
   amount INTEGER,
   user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
   contact_id UUID REFERENCES public.contacts(id) ON DELETE CASCADE NOT NULL,
+  company_id UUID REFERENCES public.companies(id) ON DELETE SET NULL, -- Future: company-level deals
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -67,8 +69,11 @@ CREATE TABLE public.notes (
 -- Create indexes for better performance
 CREATE INDEX idx_companies_user_id ON public.companies(user_id);
 CREATE INDEX idx_contacts_user_id ON public.contacts(user_id);
+CREATE INDEX idx_contacts_company_id ON public.contacts(company_id); -- For contact-company JOINs
+CREATE INDEX idx_contacts_user_company ON public.contacts(user_id, company_id); -- Composite index
 CREATE INDEX idx_deals_user_id ON public.deals(user_id);
 CREATE INDEX idx_deals_contact_id ON public.deals(contact_id);
+CREATE INDEX idx_deals_company_id ON public.deals(company_id); -- Future: company-level deals
 CREATE INDEX idx_notes_deal_id ON public.notes(deal_id);
 
 -- Function to handle updated_at timestamp

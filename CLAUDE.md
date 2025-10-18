@@ -506,7 +506,8 @@ const MyForm = ({ user, onSuccess, onClose }) => {
 
 #### **Companies CRUD Functionality**
 **Priority:** High
-**Status:** Planning
+**Status:** ✅ Ready to Implement (MVP Scoped)
+**Implementation Plan:** See `COMPANIES_CRUD_IMPLEMENTATION_PLAN.md`
 
 **Description:**
 Add comprehensive company management alongside existing contact management. This feature will enable users to:
@@ -519,17 +520,54 @@ Add comprehensive company management alongside existing contact management. This
 - Company-specific reporting and analytics
 
 **Technical Implementation:**
-- New Supabase table: `companies` with RLS policies
-- New React components following existing design patterns
+- New Supabase table: `companies` with RLS policies ✅ (already exists)
+- New React components following existing design patterns (8 new components)
 - Integration with contacts (many-to-one relationship)
 - Orange/Amber theme color scheme to distinguish from existing features
 - Reuse existing modal and form components
+- **React Select** for searchable company dropdown
+- **Infinite scroll** for scalability (not pagination)
+
+**Key Technical Decisions:**
+- ✅ **Unicode validation** - Support international company names (French, Japanese, German, etc.)
+- ✅ **JOIN queries** - Prevent N+1 query problems for performance
+- ✅ **Navigation order** - Companies placed BEFORE Contacts (organizational hierarchy)
+- ✅ **Future-proof** - company_id added to deals table now for future company-level deals
+- ✅ **React Select** - Searchable dropdown for better UX with many companies
+- ✅ **Infinite scroll** - Better mobile experience and simpler implementation
+- ✅ **Migration safety** - Keep old contacts.company column for 2-week verification period
 
 **Benefits:**
 - Better organization of B2B sales pipeline
 - Company-level reporting and insights
 - Improved contact context and relationship mapping
 - Enhanced deal tracking at organizational level
+- International business support with Unicode company names
+
+## 📦 Dependencies
+
+### **External Packages**
+
+The project uses the following external packages:
+
+**Core Dependencies:**
+- `@supabase/supabase-js` (v2.x) - Backend database and authentication
+- `react` (v18.2.0) - UI framework
+- `react-router-dom` - Client-side routing
+- `zod` - Schema validation for forms
+
+**UI/UX Libraries:**
+- `tailwindcss` (v3.1.4) - Utility-first CSS framework
+- `react-select` ⭐ **NEW for Companies feature** - Searchable dropdown component
+  - Used in: CompanyDropdown.js (contact-company association)
+  - Purpose: Better UX for users with many companies
+  - Installation: `npm install react-select`
+
+**Development Tools:**
+- `create-react-app` - Build tooling
+- `eslint` - Code linting
+
+**Note:** All dependencies are managed via `package.json` in the `/client` directory.
 
 ## 🔒 Security
 
