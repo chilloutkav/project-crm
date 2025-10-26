@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 import { FormInput, Button, Modal } from "./common";
-import { UserIcon, EmailIcon, BriefcaseIcon, BuildingIcon, PlusIcon } from "./icons";
+import { UserIcon, EmailIcon, BriefcaseIcon, PlusIcon } from "./icons";
 import CompanyDropdown from "./CompanyDropdown";
 import { validateData, contactSchema } from "../utils/validation";
 import { handleSupabaseError } from "../utils/errorHandler";
