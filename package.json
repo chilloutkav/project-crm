@@ -1,0 +1,10 @@
+{
+    "name": "project-crm",
+    "description": "CRM for small to med size businesses",
+    "engines": {
+        "node": ">= 14"
+    },
+    "devDependencies": {
+        "tailwindcss": "^3.1.4"
+    }
+}
