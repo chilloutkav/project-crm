@@ -1,25 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { User } from "lucide-react";
 import { EmailIcon } from "./icons";
 
 const ContactCard = ({ contact }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 p-6 group">
       <div className="flex flex-col items-center space-y-4">
-        {/* Profile Image */}
-        <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-100 ring-4 ring-gray-50 group-hover:ring-blue-50 transition-all duration-300">
-          <img
-            src={contact.image_url}
-            alt={contact.name}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'flex';
-            }}
-          />
-          <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg hidden">
-            {contact.name?.charAt(0)?.toUpperCase() || '?'}
-          </div>
+        {/* Profile Icon */}
+        <div className="w-16 h-16 rounded-full overflow-hidden bg-blue-100 ring-4 ring-blue-50 group-hover:ring-blue-100 transition-all duration-300 flex items-center justify-center">
+          <User className="w-8 h-8 text-blue-600" />
         </div>
 
         {/* Contact Info */}
