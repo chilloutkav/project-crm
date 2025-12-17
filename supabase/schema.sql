@@ -83,7 +83,9 @@ BEGIN
   NEW.updated_at = NOW();
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public;
 
 -- Create triggers for updated_at
 CREATE TRIGGER handle_profiles_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION handle_updated_at();
@@ -100,7 +102,9 @@ BEGIN
   VALUES (NEW.id, NEW.email, NEW.raw_user_meta_data->>'username');
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public;
 
 -- Trigger to create profile when user signs up
 CREATE TRIGGER on_auth_user_created
