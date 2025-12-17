@@ -1,0 +1,19 @@
+[build]
+  # Base directory is where your React app lives
+  base = "client"
+
+  # Command to build your React app
+  command = "npm install && npm run build"
+
+  # Directory with built files (Create React App outputs to 'build')
+  publish = "build"
+
+# Redirect all requests to index.html for React Router to work
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Environment variables (you'll set the actual values in Netlify UI)
+# REACT_APP_SUPABASE_URL = "your-supabase-url"
+# REACT_APP_SUPABASE_ANON_KEY = "your-anon-key"
