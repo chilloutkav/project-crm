@@ -35,3 +35,7 @@
 .env.test.local
 .env.production.local
 .env*.local
+
+# Editor directories and OS files
+.vscode/
+.DS_Store
