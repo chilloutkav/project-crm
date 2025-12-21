@@ -1,3 +1,15 @@
 # https://www.robotstxt.org/robotstxt.html
+
+# Allow all crawlers to access public pages
 User-agent: *
-Disallow:
+Allow: /
+
+# Disallow authenticated/private sections
+Disallow: /dashboard/
+Disallow: /dashboard/companies/
+Disallow: /dashboard/contacts/
+Disallow: /dashboard/deals/
+Disallow: /dashboard/reports/
+
+# Sitemap location
+Sitemap: https://crm.kavenkim.com/sitemap.xml

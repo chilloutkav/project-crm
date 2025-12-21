@@ -12,6 +12,7 @@ import ContactsPage from "./ContactsPage";
 import DealPage from "./DealPage";
 import DealsContainer from "./DealsContainer";
 import Reports from "./Reports";
+import Footer from "./Footer";
 import "../App.css";
 
 function AppContent() {
@@ -21,7 +22,7 @@ function AppContent() {
   if (!user) return <HomePage />;
 
   return (
-    <main className="App">
+    <main className="App flex flex-col min-h-screen">
       {/* Offline Banner */}
       {!isOnline && (
         <div className="fixed top-0 left-0 right-0 z-[60] bg-yellow-500 text-white px-4 py-3 shadow-lg">
@@ -45,36 +46,39 @@ function AppContent() {
       )}
 
       <NavBar />
-      <Routes>
-        <Route
-          exact
-          path="/"
-          element={<HomePage user={user} />}
-        />
-        <Route
-          path="/dashboard"
-          element={<DashBoard user={user} />}
-        />
-        <Route
-          path="/dashboard/companies"
-          element={<CompaniesContainer user={user} />}
-        />
-        <Route path="/dashboard/companies/:id" element={<CompanyPage />} />
-        <Route
-          path="/dashboard/deals"
-          element={<DealsContainer user={user} />}
-        />
-        <Route path="/dashboard/deals/:id" element={<DealPage />} />
-        <Route
-          path="/dashboard/contacts"
-          element={<ContactsContainer user={user} />}
-        />
-        <Route path="/dashboard/contacts/:id" element={<ContactsPage />} />
-        <Route
-          path="/dashboard/reports"
-          element={<Reports user={user} />}
-        />
-      </Routes>
+      <div className="flex-grow">
+        <Routes>
+          <Route
+            exact
+            path="/"
+            element={<HomePage user={user} />}
+          />
+          <Route
+            path="/dashboard"
+            element={<DashBoard user={user} />}
+          />
+          <Route
+            path="/dashboard/companies"
+            element={<CompaniesContainer user={user} />}
+          />
+          <Route path="/dashboard/companies/:id" element={<CompanyPage />} />
+          <Route
+            path="/dashboard/deals"
+            element={<DealsContainer user={user} />}
+          />
+          <Route path="/dashboard/deals/:id" element={<DealPage />} />
+          <Route
+            path="/dashboard/contacts"
+            element={<ContactsContainer user={user} />}
+          />
+          <Route path="/dashboard/contacts/:id" element={<ContactsPage />} />
+          <Route
+            path="/dashboard/reports"
+            element={<Reports user={user} />}
+          />
+        </Routes>
+      </div>
+      <Footer />
     </main>
   );
 }
